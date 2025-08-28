@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prajwal Poudel - Msc. Software Engineering</title>
+    <title>Prajwal Poudel - Software Engineer & Business Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -235,6 +235,13 @@
             box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
         }
         
+        .about-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
         /* Projects Section */
         .projects {
             background-color: #f8fafc;
@@ -252,6 +259,8 @@
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
         }
         
         .project-card:hover {
@@ -288,6 +297,9 @@
         
         .project-content {
             padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .project-title {
@@ -300,6 +312,27 @@
             color: var(--gray);
             font-size: 0.9rem;
             margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+        
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .project-tech span {
+            background-color: var(--light);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--primary);
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 1rem;
         }
         
         .project-link {
@@ -468,6 +501,32 @@
             font-size: 0.9rem;
         }
         
+        /* Loading spinner */
+        .loader {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            margin: 2rem auto;
+            display: none;
+        }
+        
+        .loader:after {
+            content: " ";
+            display: block;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border-radius: 50%;
+            border: 6px solid var(--primary);
+            border-color: var(--primary) transparent var(--primary) transparent;
+            animation: loader 1.2s linear infinite;
+        }
+        
+        @keyframes loader {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         /* Responsive Design */
         @media (max-width: 900px) {
             .about-content,
@@ -515,6 +574,33 @@
                 gap: 2rem;
                 text-align: center;
             }
+            
+            .project-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .project-card {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -525,7 +611,7 @@
             <nav>
                 <div class="logo">
                     <i class="fas fa-code"></i>
-                    Poudel.Msc
+                    Prajwal.P
                 </div>
                 <div class="nav-links">
                     <a href="#home">Home</a>
@@ -544,11 +630,11 @@
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
-                <h1>Msc. Software Eng</h1>
-                <p>I like to craft solid and scalable frontend products with great user experiences.</p>
+                <h1>Software Engineer & Business Manager</h1>
+                <p>I develop robust software solutions and streamline business operations for optimal performance.</p>
                 <div class="divider"></div>
-                <p>Highly skilled at progressive enhancement, design systems & UI Engineering.<br>
-                Over a decade of experience building products for clients across several countries.</p>
+                <p>Results-driven professional with expertise in software development and business management.<br>
+                Committed to creating efficient solutions that solve real-world problems.</p>
                 <a href="#projects" class="btn">View My Work</a>
             </div>
         </div>
@@ -560,21 +646,21 @@
             <h2 class="section-title">About Me</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p>I'm Olaolu Olawuyi, a passionate frontend developer with over 10 years of experience specializing in building exceptional digital experiences. My focus is on creating accessible, user-centered products that solve real problems.</p>
-                    <p>I believe in the power of clean, semantic code and constantly stay updated with the latest web technologies and best practices to deliver high-quality solutions.</p>
+                    <p>I'm Prajwal Poudel, a results-driven software developer with a strong background in creating effective desktop and web solutions. With experience in business management, I bring a unique perspective to software development projects.</p>
+                    <p>I recently completed my Bachelor of Science with Honours in Computer Science and Software Engineering from the University of Bedfordshire. My final project explored the potential of Recurrent Neural Networks (RNNs) to improve translation accuracy.</p>
                     <div class="skills">
-                        <span class="skill">HTML5</span>
-                        <span class="skill">CSS3</span>
-                        <span class="skill">JavaScript</span>
-                        <span class="skill">React</span>
-                        <span class="skill">Vue.js</span>
-                        <span class="skill">TypeScript</span>
-                        <span class="skill">UI/UX Design</span>
-                        <span class="skill">Responsive Design</span>
+                        <span class="skill">C#</span>
+                        <span class="skill">Windows Forms</span>
+                        <span class="skill">Python</span>
+                        <span class="skill">Machine Learning</span>
+                        <span class="skill">Web Development</span>
+                        <span class="skill">Business Management</span>
+                        <span class="skill">Communication</span>
+                        <span class="skill">CRM Systems</span>
                     </div>
                 </div>
                 <div class="about-image">
-                    <img src="/Users/prajwalpoudel/Desktop/IMG_4456.JPG" alt="Description of image">
+                    <img src="https://github.com/Prajwal0902/Prajwal.github.io/raw/main/Don.jpg" alt="Prajwal Poudel">
                 </div>
             </div>
         </div>
@@ -583,38 +669,10 @@
     <!-- Projects Section -->
     <section class="projects" id="projects">
         <div class="container">
-            <h2 class="section-title">Featured Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-img">
-                        <i class="fas fa-laptop-code"></i>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">E-Commerce Platform</h3>
-                        <p class="project-desc">A modern e-commerce solution with React, featuring product filtering, cart functionality, and secure checkout.</p>
-                        <a href="#" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-img">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Health & Fitness App</h3>
-                        <p class="project-desc">A responsive fitness tracking application with data visualization, workout plans, and progress monitoring.</p>
-                        <a href="#" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-img">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Financial Dashboard</h3>
-                        <p class="project-desc">An interactive dashboard for financial data analysis with real-time updates and customizable reporting.</p>
-                        <a href="#" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
+            <h2 class="section-title">My Projects</h2>
+            <div id="projects-container" class="projects-grid">
+                <div class="loader"></div>
+                <!-- Projects will be loaded dynamically from GitHub API -->
             </div>
         </div>
     </section>
@@ -631,7 +689,7 @@
                         </div>
                         <div>
                             <h3>Email</h3>
-                            <p>hello@olaolu.dev</p>
+                            <p>prajwalpoudel0902@gmail.com</p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -640,7 +698,7 @@
                         </div>
                         <div>
                             <h3>Location</h3>
-                            <p>Lagos, Nigeria</p>
+                            <p>Based in Nepal</p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -649,11 +707,11 @@
                         </div>
                         <div>
                             <h3>Phone</h3>
-                            <p>+234 800 000 0000</p>
+                            <p>+977 9811127958</p>
                         </div>
                     </div>
                 </div>
-                <form class="contact-form">
+                <form class="contact-form" id="contact-form">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" placeholder="Your name" required>
@@ -677,13 +735,12 @@
         <div class="container">
             <div class="footer-content">
                 <div class="copyright">
-                    <p>&copy; 2023 Olaolu Olawuyi. All rights reserved.</p>
+                    <p>&copy; 2023 Prajwal Poudel. All rights reserved.</p>
                 </div>
                 <div class="social-links">
-                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-dribbble"></i></a>
+                    <a href="https://github.com/Prajwal0902" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/mrpoudel/" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="mailto:prajwalpoudel0902@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
         </div>
@@ -733,6 +790,87 @@
                 header.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
                 header.style.background = 'rgba(255, 255, 255, 0.95)';
             }
+        });
+        
+        // Form submission handling
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! I will get back to you soon.');
+            this.reset();
+        });
+        
+        // Fetch GitHub projects
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectsContainer = document.getElementById('projects-container');
+            const loader = document.querySelector('.loader');
+            
+            // Show loader
+            loader.style.display = 'block';
+            
+            // Fetch GitHub repositories
+            fetch('https://api.github.com/users/Prajwal0902/repos?sort=updated&direction=desc')
+                .then(response => response.json())
+                .then(data => {
+                    // Hide loader
+                    loader.style.display = 'none';
+                    
+                    // Clear the loader
+                    projectsContainer.innerHTML = '';
+                    
+                    // Display projects
+                    data.slice(0, 6).forEach(repo => {
+                        const projectCard = document.createElement('div');
+                        projectCard.className = 'project-card';
+                        
+                        // Determine icon based on repo topics or name
+                        let iconClass = 'fas fa-code';
+                        if (repo.name.toLowerCase().includes('ml') || repo.name.toLowerCase().includes('ai')) {
+                            iconClass = 'fas fa-brain';
+                        } else if (repo.name.toLowerCase().includes('web') || repo.name.toLowerCase().includes('app')) {
+                            iconClass = 'fas fa-laptop-code';
+                        } else if (repo.name.toLowerCase().includes('mobile')) {
+                            iconClass = 'fas fa-mobile-alt';
+                        }
+                        
+                        // Get primary language or default to JavaScript
+                        const language = repo.language || 'Various';
+                        
+                        projectCard.innerHTML = `
+                            <div class="project-img">
+                                <i class="${iconClass}"></i>
+                            </div>
+                            <div class="project-content">
+                                <h3 class="project-title">${repo.name}</h3>
+                                <p class="project-desc">${repo.description || 'A software development project.'}</p>
+                                <div class="project-tech">
+                                    <span>${language}</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="${repo.html_url}" target="_blank" class="project-link">
+                                        <i class="fab fa-github"></i> View Code
+                                    </a>
+                                    ${repo.homepage ? `<a href="${repo.homepage}" target="_blank" class="project-link">
+                                        <i class="fas fa-external-link-alt"></i> Live Demo
+                                    </a>` : ''}
+                                </div>
+                            </div>
+                        `;
+                        
+                        projectsContainer.appendChild(projectCard);
+                    });
+                    
+                    // If no repos found, show a message
+                    if (data.length === 0) {
+                        projectsContainer.innerHTML = '<p>No projects found on GitHub.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching GitHub projects:', error);
+                    loader.style.display = 'none';
+                    projectsContainer.innerHTML = `
+                        <p>Unable to load projects from GitHub. Please visit my <a href="https://github.com/Prajwal0902" target="_blank">GitHub profile</a> directly.</p>
+                    `;
+                });
         });
     </script>
 </body>
