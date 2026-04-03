@@ -1211,10 +1211,7 @@
               <!-- SCOREBOARD -->
               <div id="sf-sbp">
                 <div class="sf-sbh">
-                  <div class="sf-sbt">&#9889; GLOBAL LEADERBOARD</div>
-                  <div class="sf-sbactions">
-                    <button class="sf-sbc" id="sf-clrBtn">CLEAR</button>
-                  </div>
+                  <div class="sf-sbt">&#9889; LEADERBOARD</div>
                 </div>
                 <div id="sf-sbcontent"><div class="sf-sbmpty">No scores yet &mdash; be the first!</div></div>
               </div>
@@ -1349,10 +1346,6 @@
       html += '</tbody></table>';
       el.innerHTML = html;
     }
-
-    document.getElementById('sf-clrBtn').addEventListener('click', function(){
-      if (confirm('Clear local leaderboard?')){ saveLocalSB([]); renderSB(); }
-    });
 
     // load scores on page load
     renderSB();
@@ -2027,4 +2020,3 @@
                 .catch(error => {
                     console.error('Error fetching GitHub projects:', error);
                     loader.style.display = 'none';
-                   
