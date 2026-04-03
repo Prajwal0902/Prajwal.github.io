@@ -842,6 +842,76 @@
         html {
             scroll-behavior: smooth;
         }
+
+        /* ── LANGUAGE SWITCHER ── */
+        .lang-switcher {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .lang-btn {
+            background: none;
+            border: 1px solid rgba(212,175,55,0.4);
+            color: var(--primary);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .lang-btn:hover {
+            background: rgba(212,175,55,0.1);
+            border-color: var(--primary);
+        }
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #1a1a1a;
+            border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 999;
+            min-width: 160px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .lang-switcher:hover .lang-dropdown,
+        .lang-dropdown.open {
+            display: block;
+        }
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--gray);
+            transition: all 0.15s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+        .lang-option:hover {
+            background: rgba(212,175,55,0.1);
+            color: var(--primary);
+        }
+        .lang-option.active {
+            color: var(--primary);
+            background: rgba(212,175,55,0.08);
+        }
+        .lang-flag { font-size: 1.1rem; }
+        @media (max-width: 768px) {
+            .lang-switcher { margin-right: 0.5rem; }
+            .lang-dropdown { right: 0; }
+        }
     </style>
 </head>
 <body>
@@ -854,13 +924,30 @@
                     Prajwal Poudel
                 </div>
                 <div class="nav-links">
-                    <a href="#home">Home</a>
-                    <a href="#about">About</a>
-                    <a href="#experience">Experience</a>
-                    <a href="#projects">Projects</a>
-                    <a href="#education">Education</a>
-                    <a href="#contact">Contact</a>
+                    <a href="#home" data-i18n="nav_home">Home</a>
+                    <a href="#about" data-i18n="nav_about">About</a>
+                    <a href="#experience" data-i18n="nav_experience">Experience</a>
+                    <a href="#projects" data-i18n="nav_projects">Projects</a>
+                    <a href="#education" data-i18n="nav_education">Education</a>
+                    <a href="#contact" data-i18n="nav_contact">Contact</a>
                 </div>
+                <div class="lang-switcher" id="langSwitcher">
+                <button class="lang-btn" id="langBtn" aria-label="Change language">
+                    <i class="fas fa-globe"></i>
+                    <span id="langCurrentLabel">EN</span>
+                    <i class="fas fa-chevron-down" style="font-size:0.65rem"></i>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <button class="lang-option active" data-lang="en"><span class="lang-flag">🇬🇧</span> English</button>
+                    <button class="lang-option" data-lang="es"><span class="lang-flag">🇪🇸</span> Español</button>
+                    <button class="lang-option" data-lang="fr"><span class="lang-flag">🇫🇷</span> Français</button>
+                    <button class="lang-option" data-lang="de"><span class="lang-flag">🇩🇪</span> Deutsch</button>
+                    <button class="lang-option" data-lang="nl"><span class="lang-flag">🇳🇱</span> Nederlands</button>
+                    <button class="lang-option" data-lang="zh"><span class="lang-flag">🇨🇳</span> 中文</button>
+                    <button class="lang-option" data-lang="ja"><span class="lang-flag">🇯🇵</span> 日本語</button>
+                    <button class="lang-option" data-lang="ne"><span class="lang-flag">🇳🇵</span> नेपाली</button>
+                </div>
+            </div>
                 <button class="menu-btn">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -872,11 +959,11 @@
     <section class="hero full-screen-section" id="home">
         <div class="container">
             <div class="hero-content">
-                <h1>Software Engineer & Business Manager</h1>
-                <p>MSc Software Engineering graduate with expertise in Python, SQL, and full-stack development.</p>
+                <h1 data-i18n="hero_title">Software Engineer & Business Manager</h1>
+                <p data-i18n="hero_sub1">MSc Software Engineering graduate with expertise in Python, SQL, and full-stack development.</p>
                 <div class="divider"></div>
-                <p>Passionate about building user-centric applications and leveraging emerging technologies like NLP/ML to solve real-world problems.</p>
-                <a href="#projects" class="btn">View My Work</a>
+                <p data-i18n="hero_sub2">Passionate about building user-centric applications and leveraging emerging technologies like NLP/ML to solve real-world problems.</p>
+                <a href="#projects" class="btn" data-i18n="hero_btn">View My Work</a>
             </div>
         </div>
     </section>
@@ -884,12 +971,17 @@
     <!-- About Section -->
     <section class="about full-screen-section" id="about">
         <div class="container">
-            <h2 class="section-title">About Me</h2>
+            <h2 class="section-title" data-i18n="about_title">About Me</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p>I'm Prajwal Poudel, a Software Engineering graduate (MSc) with expertise in Python, SQL, and full-stack development, complemented by hands-on experience in database management, IT support, and web/app development.</p>
-                    <p>My professional journey has equipped me with strong problem-solving abilities, process optimization skills, and experience in collaborative project delivery. I'm passionate about building user-centric applications and leveraging emerging technologies like NLP and machine learning to create innovative solutions.</p>
-                    <p>With experience as both a software developer and business manager, I bring a unique perspective to projects, understanding both the technical requirements and business objectives needed for success.</p>
+                    <p data-i18n="about_p1">I'm Prajwal Poudel — a Software Engineering graduate (MSc) who speaks fluent Python, SQL, and just enough JavaScript to accidentally break the UI in three different ways at once. I’ve mastered full-stack development, database management, IT support (yes, I’ve tried turning it off and on again), and web/app development, often while muttering, “Why does this work now?”</p>
+                    <p data-i18n="about_p2">My professional journey has blessed me with strong problem-solving skills — like figuring out why the code worked yesterday but not today — and process optimization abilities that would make a spreadsheet weep with joy. I thrive in collaborative environments, mainly because someone needs to remind me to push to the right branch.
+                    </p>
+                    <p data-i18n="about_p3">But wait, there’s more.
+When I’m not wrestling with APIs or debugging life itself, I play guitar (loud enough to annoy the neighbors, soulful enough to keep them curious), sing (mostly in the shower, but occasionally on purpose), cook (my dal rice has layers, like an onion, but tastier), and go on random drives — because nothing says “I have deadlines” like getting lost at 90 km/h with the windows down and a questionable playlist on shuffle.</p>
+                    <p data-i18n="about_p4">I find love in everything — even in merge conflicts (eventually). My mantra? "Perfection is not the key, consistency is."
+Which is great, because my code is rarely perfect, but my commitment to making it work eventually is legendary. Possibly tragic. Definitely consistent.
+                    </p>
                     <div class="skills">
                         <span class="skill">Python</span>
                         <span class="skill">SQL</span>
@@ -916,312 +1008,187 @@
          ══════════════════════════════════════════════ -->
     <section id="game" style="background:var(--darker);min-height:auto;padding:4rem 0 5rem;">
       <div class="container">
-        <h2 class="section-title">Snake &amp; Frog</h2>
-        <p style="color:var(--gray);font-size:1rem;margin-bottom:2.5rem;max-width:600px;">
-          Take a break — eat frogs, dodge fire, outsmart tornadoes. Scores are saved to a shared GitHub Gist leaderboard visible to everyone who plays.
+        <h2 class="section-title" data-i18n="game_title">Snake &amp; Frog</h2>
+        <p style="color:var(--gray);font-size:1rem;margin-bottom:2rem;max-width:600px;">
+          <span data-i18n="game_sub">Take a break — eat frogs, dodge fire, outsmart tornadoes.</span>
         </p>
 
-        <!-- GAME WRAPPER: centres and scales the game on all screen sizes -->
-        <div id="sf-root" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+        <div id="sf-root">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+            #sf-root{--gsc:#39ff14;--gfc:#00cfff;--gbd:#1a1a2e;--gac:#ff007f;--gtx:#e0e0e0;--gdm:#444466;font-family:'Press Start 2P',monospace;width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;}
+            #sf-wrap{position:relative;background:#0a0a0f;border-radius:8px;border:1px solid rgba(212,175,55,.15);box-shadow:0 0 60px rgba(0,0,0,.6);padding:16px 12px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;overflow:hidden;width:100%;max-width:840px;}
+            #sf-scanlines{position:absolute;inset:0;pointer-events:none;z-index:200;background:repeating-linear-gradient(0deg,rgba(0,0,0,.06) 0,rgba(0,0,0,.06) 1px,transparent 1px,transparent 4px);border-radius:8px;}
+            #sf-title{font-family:'Press Start 2P',monospace;font-size:clamp(14px,3.5vw,20px);letter-spacing:.15em;color:#39ff14;text-shadow:0 0 16px #39ff14,0 0 32px #39ff14;animation:sf-flicker 5s infinite;position:relative;z-index:1;}
+            #sf-title .sf-ta{color:#00cfff;text-shadow:0 0 16px #00cfff;}
+            @keyframes sf-flicker{0%,94%,100%{opacity:1}95%{opacity:.6}96%{opacity:1}98%{opacity:.5}}
+            /* game area */
+            #sf-game-area{display:flex;gap:10px;align-items:flex-start;justify-content:center;width:100%;position:relative;z-index:1;}
+            /* sidebars */
+            .sf-sidebar{display:flex;flex-direction:column;gap:8px;width:130px;flex-shrink:0;}
+            .sf-panel{background:rgba(255,255,255,.03);border:1px solid var(--gbd);padding:9px 10px;position:relative;border-radius:2px;}
+            .sf-panel::before{content:'';position:absolute;inset:-1px;border:1px solid transparent;background:linear-gradient(135deg,var(--gac),transparent 55%) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none;}
+            .sf-plabel{font-size:6px;color:var(--gdm);letter-spacing:.12em;margin-bottom:5px;text-transform:uppercase;}
+            .sf-bigval{font-family:'VT323',monospace;font-size:38px;color:var(--gsc);text-shadow:0 0 12px var(--gsc);line-height:1;}
+            .sf-timeval{font-family:'VT323',monospace;font-size:26px;color:#aaffdd;text-shadow:0 0 8px #aaffdd88;line-height:1;}
+            .sf-difftag{font-size:6.5px;letter-spacing:.05em;}
+            /* swatches */
+            #sf-root .sf-swatches{display:flex;flex-wrap:wrap;gap:4px;}
+            #sf-root .sf-sw{width:18px;height:18px;border-radius:3px;cursor:pointer;border:2px solid transparent;transition:transform .1s,border-color .1s;flex-shrink:0;}
+            #sf-root .sf-sw:hover{transform:scale(1.2);}
+            #sf-root .sf-sw.on{border-color:#fff;transform:scale(1.15);box-shadow:0 0 5px #fff8;}
+            /* canvas */
+            #sf-cw{position:relative;flex-shrink:0;}
+            #sf-gc{display:block;border:2px solid var(--gbd);image-rendering:pixelated;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 0 30px rgba(57,255,20,.07);}
+            /* overlays */
+            .sf-ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,15,.92);gap:10px;z-index:5;padding:16px;}
+            .sf-ov.hide{display:none;}
+            .sf-ov-title{font-size:clamp(10px,2.5vw,13px);color:var(--gac);text-shadow:0 0 18px var(--gac);text-align:center;line-height:1.9;}
+            .sf-ov-sub{font-size:clamp(7px,1.5vw,8px);color:var(--gdm);text-align:center;line-height:2.2;}
+            .sf-fscore{font-family:'VT323',monospace;font-size:clamp(26px,6vw,36px);color:var(--gfc);text-shadow:0 0 16px var(--gfc);text-align:center;}
+            .sf-rbadge{font-size:clamp(7px,1.8vw,9px);color:#ffd700;text-shadow:0 0 10px #ffd700;text-align:center;}
+            .sf-niw{display:flex;flex-direction:column;align-items:center;gap:6px;}
+            .sf-niw label{font-size:clamp(6px,1.5vw,7px);color:var(--gdm);letter-spacing:.12em;}
+            #sf-pname{font-family:'Press Start 2P',monospace;font-size:clamp(9px,2.2vw,11px);background:rgba(255,255,255,.05);border:2px solid var(--gsc);color:var(--gsc);padding:8px 10px;text-align:center;outline:none;width:min(200px,65%);letter-spacing:.05em;}
+            #sf-pname::placeholder{color:var(--gdm);}
+            #sf-root .sf-btn{font-family:'Press Start 2P',monospace;font-size:clamp(7px,2vw,9px);background:none;border:2px solid var(--gsc);color:var(--gsc);padding:8px 16px;cursor:pointer;text-shadow:0 0 8px var(--gsc);transition:all .12s;letter-spacing:.1em;}
+            #sf-root .sf-btn:hover,#sf-root .sf-btn:active{background:var(--gsc);color:#0a0a0f;}
+            #sf-root .sf-btnrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+            #sf-root .sf-btnf{border-color:var(--gfc);color:var(--gfc);text-shadow:0 0 7px var(--gfc);}
+            #sf-root .sf-btnf:hover,#sf-root .sf-btnf:active{background:var(--gfc);color:#0a0a0f;}
+            /* d-pad */
+            #sf-root .sf-dw{display:flex;flex-direction:column;align-items:center;gap:3px;}
+            #sf-root .sf-dr{display:flex;gap:3px;justify-content:center;}
+            #sf-root .sf-db{width:44px;height:44px;background:rgba(255,255,255,.06);border:1px solid var(--gbd);color:var(--gdm);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .08s;user-select:none;-webkit-user-select:none;line-height:1;border-radius:4px;}
+            #sf-root .sf-db:hover,#sf-root .sf-db:active{background:rgba(255,255,255,.18);color:var(--gsc);border-color:var(--gsc);}
+            #sf-root .sf-dg{width:44px;height:44px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.02);border-radius:4px;}
+            /* legend */
+            #sf-root .sf-legrow{display:flex;align-items:center;gap:5px;margin-bottom:3px;}
+            #sf-root .sf-legdot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+            #sf-root .sf-ht{font-size:5px;color:var(--gdm);line-height:2.2;}
+            /* mobile HUD */
+            #sf-mobile-hud{display:none;width:100%;gap:6px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1;}
+            .sf-hud-chip{background:rgba(255,255,255,.04);border:1px solid var(--gbd);padding:6px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;min-width:60px;max-width:120px;}
+            .sf-hud-chip .sf-plabel{margin-bottom:0;font-size:5.5px;}
+            .sf-hud-chip .sf-bigval{font-size:30px;}
+            .sf-hud-chip .sf-timeval{font-size:22px;}
+            .sf-hud-chip .sf-difftag{font-size:7px;}
+            /* mobile dpad */
+            #sf-mobile-dpad{display:none;flex-direction:column;align-items:center;gap:3px;position:relative;z-index:1;width:100%;}
+            /* mobile colors */
+            #sf-mobile-colors{display:none;gap:20px;width:100%;justify-content:center;position:relative;z-index:1;flex-wrap:wrap;}
+            .sf-color-group{display:flex;flex-direction:column;gap:5px;align-items:center;}
+            /* scoreboard */
+            #sf-sbp{width:100%;background:rgba(255,255,255,.025);border:1px solid var(--gbd);padding:10px 14px;position:relative;z-index:1;}
+            #sf-sbp::before{content:'';position:absolute;inset:-1px;border:1px solid transparent;background:linear-gradient(90deg,var(--gfc),transparent 50%) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none;}
+            #sf-root .sf-sbh{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+            #sf-root .sf-sbt{font-size:7px;color:var(--gfc);letter-spacing:.12em;text-shadow:0 0 8px var(--gfc);}
+            #sf-root .sf-sbtbl{width:100%;border-collapse:collapse;}
+            #sf-root .sf-sbtbl th{font-size:5px;color:var(--gdm);text-align:left;padding:3px 5px;border-bottom:1px solid var(--gbd);letter-spacing:.1em;}
+            #sf-root .sf-sbtbl th:last-child{text-align:right;}
+            #sf-root .sf-sbtbl td{font-family:'VT323',monospace;font-size:18px;padding:2px 5px;color:var(--gtx);line-height:1.3;text-shadow:none;}
+            #sf-root .sf-sbtbl td:last-child{text-align:right;color:var(--gsc);text-shadow:0 0 7px var(--gsc);}
+            #sf-root .sf-sbtbl tr.sf-g1 td{color:#ffd700;text-shadow:0 0 7px #ffd700;}
+            #sf-root .sf-sbtbl tr.sf-g1 td:last-child{color:#ffd700;text-shadow:0 0 9px #ffd700;}
+            #sf-root .sf-sbrank{color:var(--gdm)!important;font-size:13px!important;text-shadow:none!important;}
+            #sf-root .sf-sbmpty{font-size:7px;color:var(--gdm);text-align:center;padding:10px;}
+            /* ── RESPONSIVE ── */
+            @media(max-width:680px){
+              .sf-sidebar{display:none!important;}
+              #sf-mobile-hud{display:flex!important;}
+              #sf-mobile-dpad{display:flex!important;}
+              #sf-mobile-colors{display:flex!important;}
+              #sf-root .sf-db{width:56px;height:56px;font-size:24px;}
+              #sf-root .sf-dg{width:56px;height:56px;}
+            }
+          </style>
 
-          <!-- RESPONSIVE SCALE CONTAINER -->
-          <div id="sf-scaler" style="width:100%;max-width:840px;transform-origin:top center;">
+          <div id="sf-wrap">
+            <div id="sf-scanlines"></div>
+            <div id="sf-title">SNAKE <span class="sf-ta">&amp;</span> FROG</div>
 
-            <style>
-              /* ── GAME FONT ─────────────────────────────────── */
-              @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+            <!-- MOBILE HUD -->
+            <div id="sf-mobile-hud">
+              <div class="sf-hud-chip"><div class="sf-plabel">SCORE</div><div class="sf-bigval" id="sf-scoredisp-m">0</div></div>
+              <div class="sf-hud-chip"><div class="sf-plabel">TIME</div><div class="sf-timeval" id="sf-timedisp-m">00:00</div></div>
+              <div class="sf-hud-chip"><div class="sf-plabel">LEVEL</div><div class="sf-difftag" id="sf-difftag-m" style="color:#39ff14;text-shadow:0 0 8px #39ff14">&#9679; EASY</div></div>
+            </div>
 
-              /* ── SCOPED CSS VARS (won't leak into site) ────── */
-              #sf-root {
-                --gsc: #39ff14;
-                --gfc: #00cfff;
-                --gbg: #0a0a0f;
-                --gbd: #1a1a2e;
-                --gac: #ff007f;
-                --gtx: #e0e0e0;
-                --gdm: #444466;
-                font-family: 'Press Start 2P', monospace;
-              }
+            <div id="sf-game-area">
+              <!-- LEFT SIDEBAR -->
+              <div class="sf-sidebar">
+                <div class="sf-panel"><div class="sf-plabel">Score</div><div class="sf-bigval" id="sf-scoredisp">0</div></div>
+                <div class="sf-panel"><div class="sf-plabel">Time</div><div class="sf-timeval" id="sf-timedisp">00:00</div></div>
+                <div class="sf-panel"><div class="sf-plabel">Difficulty</div><div class="sf-difftag" id="sf-difftag" style="color:#39ff14;text-shadow:0 0 8px #39ff14">&#9679; EASY</div></div>
+                <div class="sf-panel"><div class="sf-plabel">Snake</div><div class="sf-swatches" id="sf-snakesw"></div></div>
+                <div class="sf-panel"><div class="sf-plabel">Frog</div><div class="sf-swatches" id="sf-frogsw"></div></div>
+              </div>
 
-              /* scanlines overlay scoped to game root */
-              #sf-scanlines {
-                position:absolute;inset:0;pointer-events:none;z-index:200;
-                background:repeating-linear-gradient(0deg,rgba(0,0,0,.06) 0,rgba(0,0,0,.06) 1px,transparent 1px,transparent 4px);
-                border-radius:8px;
-              }
-
-              /* ── LAYOUT ──────────────────────────────────── */
-              #sf-wrap {
-                position:relative;
-                background:#0a0a0f;
-                border-radius:8px;
-                border:1px solid rgba(212,175,55,.15);
-                box-shadow:0 0 60px rgba(0,0,0,.6),0 0 0 1px rgba(57,255,20,.05);
-                padding:16px 12px 20px;
-                display:flex;flex-direction:column;align-items:center;gap:10px;
-                overflow:hidden;
-              }
-
-              #sf-wrap::before {
-                content:'';position:absolute;inset:0;
-                background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.008) 40px),
-                           repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.008) 40px);
-                pointer-events:none;
-              }
-
-              #sf-title {
-                font-family:'Press Start 2P',monospace;
-                font-size:clamp(12px,2.2vw,18px);
-                letter-spacing:.15em;color:#39ff14;
-                text-shadow:0 0 16px #39ff14,0 0 32px #39ff14;
-                animation:sf-flicker 5s infinite;
-                position:relative;z-index:1;
-              }
-              #sf-title .sf-ta{color:#00cfff;text-shadow:0 0 16px #00cfff;}
-              @keyframes sf-flicker{0%,94%,100%{opacity:1}95%{opacity:.6}96%{opacity:1}98%{opacity:.5}}
-
-              /* game area row */
-              #sf-game-area{display:flex;gap:10px;align-items:flex-start;justify-content:center;width:100%;position:relative;z-index:1;}
-
-              /* sidebars */
-              .sf-sidebar{display:flex;flex-direction:column;gap:8px;width:130px;flex-shrink:0;}
-              .sf-panel{background:rgba(255,255,255,.03);border:1px solid var(--gbd);padding:9px 10px;position:relative;border-radius:2px;}
-              .sf-panel::before{content:'';position:absolute;inset:-1px;border:1px solid transparent;
-                background:linear-gradient(135deg,var(--gac),transparent 55%) border-box;
-                -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
-                -webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none;}
-              .sf-plabel{font-size:5.5px;color:var(--gdm);letter-spacing:.12em;margin-bottom:5px;text-transform:uppercase;}
-              .sf-bigval{font-family:'VT323',monospace;font-size:38px;color:var(--gsc);text-shadow:0 0 12px var(--gsc);line-height:1;}
-              .sf-timeval{font-family:'VT323',monospace;font-size:26px;color:#aaffdd;text-shadow:0 0 8px #aaffdd88;line-height:1;}
-              .sf-difftag{font-size:6.5px;letter-spacing:.05em;}
-
-              /* swatches */
-              #sf-root .sf-swatches{display:flex;flex-wrap:wrap;gap:4px;}
-              #sf-root .sf-sw{width:18px;height:18px;border-radius:3px;cursor:pointer;border:2px solid transparent;transition:transform .1s,border-color .1s;flex-shrink:0;}
-              #sf-root .sf-sw:hover{transform:scale(1.2);}
-              #sf-root .sf-sw.on{border-color:#fff;transform:scale(1.15);box-shadow:0 0 5px #fff8;}
-
-              /* canvas wrapper */
-              #sf-cw{position:relative;flex-shrink:0;}
-              #sf-gc{display:block;border:2px solid var(--gbd);image-rendering:pixelated;
-                box-shadow:0 0 0 1px rgba(255,255,255,.04),0 0 30px rgba(57,255,20,.07);}
-
-              /* overlays */
-              .sf-ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
-                justify-content:center;background:rgba(10,10,15,.92);gap:11px;z-index:5;padding:16px;}
-              .sf-ov.hide{display:none;}
-              .sf-ov-title{font-size:clamp(9px,1.6vw,12px);color:var(--gac);text-shadow:0 0 18px var(--gac);text-align:center;line-height:1.9;}
-              .sf-ov-sub{font-size:5.5px;color:var(--gdm);text-align:center;line-height:2.4;}
-              .sf-fscore{font-family:'VT323',monospace;font-size:32px;color:var(--gfc);text-shadow:0 0 16px var(--gfc);text-align:center;}
-              .sf-rbadge{font-size:6.5px;color:#ffd700;text-shadow:0 0 10px #ffd700;text-align:center;}
-              .sf-niw{display:flex;flex-direction:column;align-items:center;gap:5px;}
-              .sf-niw label{font-size:5.5px;color:var(--gdm);letter-spacing:.12em;}
-              #sf-pname{font-family:'Press Start 2P',monospace;font-size:9px;
-                background:rgba(255,255,255,.05);border:2px solid var(--gsc);color:var(--gsc);
-                padding:7px 10px;text-align:center;outline:none;width:180px;letter-spacing:.05em;}
-              #sf-pname::placeholder{color:var(--gdm);font-size:7px;}
-
-              /* buttons */
-              #sf-root .sf-btn{font-family:'Press Start 2P',monospace;font-size:6.5px;background:none;
-                border:2px solid var(--gsc);color:var(--gsc);padding:7px 14px;cursor:pointer;
-                text-shadow:0 0 8px var(--gsc);transition:all .12s;letter-spacing:.1em;}
-              #sf-root .sf-btn:hover{background:var(--gsc);color:#0a0a0f;}
-              #sf-root .sf-btnrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
-              #sf-root .sf-btnf{border-color:var(--gfc);color:var(--gfc);text-shadow:0 0 7px var(--gfc);}
-              #sf-root .sf-btnf:hover{background:var(--gfc);color:#0a0a0f;}
-
-              /* d-pad */
-              #sf-root .sf-dw{display:flex;flex-direction:column;align-items:center;gap:2px;}
-              #sf-root .sf-dr{display:flex;gap:2px;justify-content:center;}
-              #sf-root .sf-db{width:34px;height:34px;background:rgba(255,255,255,.04);border:1px solid var(--gbd);
-                color:var(--gdm);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-                transition:all .08s;user-select:none;-webkit-user-select:none;line-height:1;border-radius:2px;}
-              #sf-root .sf-db:hover,#sf-root .sf-db:active{background:rgba(255,255,255,.1);color:var(--gsc);border-color:var(--gsc);}
-              #sf-root .sf-dg{width:34px;height:34px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.02);}
-
-              /* legend */
-              #sf-root .sf-legrow{display:flex;align-items:center;gap:5px;margin-bottom:3px;}
-              #sf-root .sf-legdot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
-              #sf-root .sf-ht{font-size:5px;color:var(--gdm);line-height:2.2;}
-
-              /* scoreboard */
-              #sf-sbp{width:100%;background:rgba(255,255,255,.025);border:1px solid var(--gbd);padding:10px 14px;position:relative;z-index:1;}
-              #sf-sbp::before{content:'';position:absolute;inset:-1px;border:1px solid transparent;
-                background:linear-gradient(90deg,var(--gfc),transparent 50%) border-box;
-                -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
-                -webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none;}
-              #sf-root .sf-sbh{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;gap:8px;flex-wrap:wrap;}
-              #sf-root .sf-sbt{font-size:6.5px;color:var(--gfc);letter-spacing:.12em;text-shadow:0 0 8px var(--gfc);}
-              #sf-root .sf-sbactions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
-              #sf-root .sf-sbc{font-family:'Press Start 2P',monospace;font-size:4.5px;background:none;
-                border:1px solid var(--gdm);color:var(--gdm);padding:3px 6px;cursor:pointer;}
-              #sf-root .sf-sbc:hover{border-color:var(--gac);color:var(--gac);}
-              #sf-root .sf-ghstatus{font-size:4.5px;color:var(--gdm);}
-              #sf-root .sf-sbtbl{width:100%;border-collapse:collapse;}
-              #sf-root .sf-sbtbl th{font-size:4.5px;color:var(--gdm);text-align:left;padding:3px 5px;border-bottom:1px solid var(--gbd);letter-spacing:.1em;}
-              #sf-root .sf-sbtbl th:last-child{text-align:right;}
-              #sf-root .sf-sbtbl td{font-family:'VT323',monospace;font-size:17px;padding:2px 5px;color:var(--gtx);line-height:1.3;}
-              #sf-root .sf-sbtbl td:last-child{text-align:right;color:var(--gsc);text-shadow:0 0 7px var(--gsc);}
-              #sf-root .sf-sbtbl tr.sf-g1 td{color:#ffd700;text-shadow:0 0 7px #ffd700;}
-              #sf-root .sf-sbtbl tr.sf-g1 td:last-child{color:#ffd700;text-shadow:0 0 9px #ffd700;}
-              #sf-root .sf-sbrank{color:var(--gdm)!important;font-size:13px!important;text-shadow:none!important;}
-              #sf-root .sf-sbmpty{font-size:6.5px;color:var(--gdm);text-align:center;padding:10px;}
-
-              /* GitHub info box */
-              #sf-ghinfo{font-size:5px;color:var(--gdm);text-align:center;line-height:2;padding:6px 0 0;position:relative;z-index:1;}
-              #sf-ghinfo a{color:var(--gfc);text-decoration:none;}
-              #sf-ghinfo a:hover{color:#fff;}
-
-              /* ── RESPONSIVE ──────────────────────────────── */
-              /* hide sidebars on narrow screens, show stacked controls below canvas */
-              @media(max-width:700px){
-                .sf-sidebar{display:none;}
-                #sf-game-area{flex-direction:column;align-items:center;}
-                #sf-mobile-hud{display:flex!important;}
-                #sf-mobile-dpad{display:flex!important;}
-              }
-              #sf-mobile-hud{
-                display:none;
-                gap:8px;justify-content:center;flex-wrap:wrap;
-                width:100%;position:relative;z-index:1;
-              }
-              .sf-hud-chip{
-                background:rgba(255,255,255,.04);border:1px solid var(--gbd);
-                padding:5px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;
-              }
-              .sf-hud-chip .sf-plabel{margin-bottom:0;}
-              #sf-mobile-dpad{
-                display:none;
-                flex-direction:column;align-items:center;gap:2px;
-                position:relative;z-index:1;margin-top:4px;
-              }
-            </style>
-
-            <div id="sf-wrap">
-              <div id="sf-scanlines"></div>
-
-              <div id="sf-title">SNAKE <span class="sf-ta">&amp;</span> FROG</div>
-
-              <!-- MOBILE HUD (visible on small screens instead of sidebars) -->
-              <div id="sf-mobile-hud">
-                <div class="sf-hud-chip">
-                  <div class="sf-plabel">SCORE</div>
-                  <div class="sf-bigval" id="sf-scoredisp-m">0</div>
+              <!-- CANVAS -->
+              <div id="sf-cw">
+                <canvas id="sf-gc" width="400" height="400"></canvas>
+                <div class="sf-ov" id="sf-entryOv">
+                  <div class="sf-ov-title">SNAKE &amp; FROG</div>
+                  <div class="sf-ov-sub">Eat frogs. Avoid fire, walls &amp; tornadoes.<br>Grab the golden EGG to reset length.</div>
+                  <div class="sf-niw"><label>YOUR NAME</label><input type="text" id="sf-pname" maxlength="12" placeholder="PLAYER ONE" autocomplete="off" spellcheck="false"></div>
+                  <button class="sf-btn" id="sf-startBtn">START GAME</button>
                 </div>
-                <div class="sf-hud-chip">
-                  <div class="sf-plabel">TIME</div>
-                  <div class="sf-timeval" id="sf-timedisp-m">00:00</div>
-                </div>
-                <div class="sf-hud-chip">
-                  <div class="sf-plabel">LEVEL</div>
-                  <div class="sf-difftag" id="sf-difftag-m" style="color:#39ff14;text-shadow:0 0 8px #39ff14">&#9679; EASY</div>
+                <div class="sf-ov hide" id="sf-goOv">
+                  <div class="sf-ov-title" id="sf-goTitle">GAME OVER</div>
+                  <div class="sf-fscore" id="sf-goScore"></div>
+                  <div class="sf-rbadge" id="sf-goBadge"></div>
+                  <div class="sf-btnrow">
+                    <button class="sf-btn" id="sf-replayBtn">PLAY AGAIN</button>
+                    <button class="sf-btn sf-btnf" id="sf-chNameBtn">CHANGE NAME</button>
+                  </div>
                 </div>
               </div>
 
-              <div id="sf-game-area">
-
-                <!-- LEFT SIDEBAR -->
-                <div class="sf-sidebar">
-                  <div class="sf-panel">
-                    <div class="sf-plabel">Score</div>
-                    <div class="sf-bigval" id="sf-scoredisp">0</div>
-                  </div>
-                  <div class="sf-panel">
-                    <div class="sf-plabel">Time</div>
-                    <div class="sf-timeval" id="sf-timedisp">00:00</div>
-                  </div>
-                  <div class="sf-panel">
-                    <div class="sf-plabel">Difficulty</div>
-                    <div class="sf-difftag" id="sf-difftag" style="color:#39ff14;text-shadow:0 0 8px #39ff14">&#9679; EASY</div>
-                  </div>
-                  <div class="sf-panel">
-                    <div class="sf-plabel">Snake</div>
-                    <div class="sf-swatches" id="sf-snakesw"></div>
-                  </div>
-                  <div class="sf-panel">
-                    <div class="sf-plabel">Frog</div>
-                    <div class="sf-swatches" id="sf-frogsw"></div>
-                  </div>
+              <!-- RIGHT SIDEBAR -->
+              <div class="sf-sidebar">
+                <div class="sf-panel">
+                  <div class="sf-plabel">Legend</div>
+                  <div class="sf-legrow"><div class="sf-legdot" style="background:#00cfff;box-shadow:0 0 4px #00cfff"></div><span style="font-size:5px;color:var(--gdm)">FROG +1 score</span></div>
+                  <div class="sf-legrow"><div class="sf-legdot" style="background:#ffe066;box-shadow:0 0 4px #ffe066"></div><span style="font-size:5px;color:var(--gdm)">EGG reset length</span></div>
+                  <div class="sf-legrow"><div class="sf-legdot" style="background:#ff4400;box-shadow:0 0 4px #ff4400"></div><span style="font-size:5px;color:var(--gdm)">FIRE = death</span></div>
+                  <div class="sf-legrow"><div class="sf-legdot" style="background:#888;box-shadow:0 0 3px #888"></div><span style="font-size:5px;color:var(--gdm)">WALL = death</span></div>
+                  <div class="sf-legrow"><div class="sf-legdot" style="background:#cc88ff;box-shadow:0 0 4px #cc88ff"></div><span style="font-size:5px;color:var(--gdm)">TORNADO moves!</span></div>
+                  <div style="margin-top:6px" class="sf-ht">Arrows or WASD<br>Swipe on canvas</div>
                 </div>
-
-                <!-- CANVAS -->
-                <div id="sf-cw">
-                  <canvas id="sf-gc" width="400" height="400"></canvas>
-                  <!-- entry overlay -->
-                  <div class="sf-ov" id="sf-entryOv">
-                    <div class="sf-ov-title">SNAKE &amp; FROG</div>
-                    <div class="sf-ov-sub">Eat frogs. Avoid fire, walls, tornadoes.<br>Grab the golden EGG to reset length.<br>Scores saved to global leaderboard.</div>
-                    <div class="sf-niw">
-                      <label>YOUR NAME</label>
-                      <input type="text" id="sf-pname" maxlength="12" placeholder="PLAYER ONE" autocomplete="off" spellcheck="false">
-                    </div>
-                    <button class="sf-btn" id="sf-startBtn">START GAME</button>
+                <div class="sf-panel">
+                  <div class="sf-plabel">D-Pad</div>
+                  <div class="sf-dw">
+                    <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dU">&#9650;</button><div class="sf-dg"></div></div>
+                    <div class="sf-dr"><button class="sf-db" id="sf-dL">&#9668;</button><div class="sf-dg" style="background:rgba(255,255,255,.05)"></div><button class="sf-db" id="sf-dR">&#9658;</button></div>
+                    <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dD">&#9660;</button><div class="sf-dg"></div></div>
                   </div>
-                  <!-- game over overlay -->
-                  <div class="sf-ov hide" id="sf-goOv">
-                    <div class="sf-ov-title" id="sf-goTitle">GAME OVER</div>
-                    <div class="sf-fscore" id="sf-goScore"></div>
-                    <div class="sf-rbadge" id="sf-goBadge"></div>
-                    <div class="sf-btnrow">
-                      <button class="sf-btn" id="sf-replayBtn">PLAY AGAIN</button>
-                      <button class="sf-btn sf-btnf" id="sf-chNameBtn">CHANGE NAME</button>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- RIGHT SIDEBAR -->
-                <div class="sf-sidebar">
-                  <div class="sf-panel">
-                    <div class="sf-plabel">Legend</div>
-                    <div class="sf-legrow"><div class="sf-legdot" style="background:#00cfff;box-shadow:0 0 4px #00cfff"></div><span style="font-size:4.5px;color:var(--gdm)">FROG +1 score</span></div>
-                    <div class="sf-legrow"><div class="sf-legdot" style="background:#ffe066;box-shadow:0 0 4px #ffe066"></div><span style="font-size:4.5px;color:var(--gdm)">EGG reset length</span></div>
-                    <div class="sf-legrow"><div class="sf-legdot" style="background:#ff4400;box-shadow:0 0 4px #ff4400"></div><span style="font-size:4.5px;color:var(--gdm)">FIRE = death</span></div>
-                    <div class="sf-legrow"><div class="sf-legdot" style="background:#888;box-shadow:0 0 3px #888"></div><span style="font-size:4.5px;color:var(--gdm)">WALL = death</span></div>
-                    <div class="sf-legrow"><div class="sf-legdot" style="background:#cc88ff;box-shadow:0 0 4px #cc88ff"></div><span style="font-size:4.5px;color:var(--gdm)">TORNADO moves!</span></div>
-                    <div style="margin-top:6px" class="sf-ht">Arrows/WASD<br>Speed grows<br>with time+score</div>
-                  </div>
-                  <div class="sf-panel">
-                    <div class="sf-plabel">D-Pad</div>
-                    <div class="sf-dw">
-                      <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dU">&#9650;</button><div class="sf-dg"></div></div>
-                      <div class="sf-dr"><button class="sf-db" id="sf-dL">&#9668;</button><div class="sf-dg" style="background:rgba(255,255,255,.04)"></div><button class="sf-db" id="sf-dR">&#9658;</button></div>
-                      <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dD">&#9660;</button><div class="sf-dg"></div></div>
-                    </div>
-                  </div>
-                  <!-- color pickers in right sidebar on mobile -->
-                  <div class="sf-panel" style="display:none" id="sf-mobile-colors">
-                    <div class="sf-plabel">Snake</div>
-                    <div class="sf-swatches" id="sf-snakesw-m"></div>
-                    <div class="sf-plabel" style="margin-top:6px">Frog</div>
-                    <div class="sf-swatches" id="sf-frogsw-m"></div>
-                  </div>
-                </div>
-
-              </div><!-- /sf-game-area -->
-
-              <!-- MOBILE D-PAD (shown below canvas on small screens) -->
-              <div id="sf-mobile-dpad">
-                <div class="sf-dw">
-                  <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dU2">&#9650;</button><div class="sf-dg"></div></div>
-                  <div class="sf-dr"><button class="sf-db" id="sf-dL2">&#9668;</button><div class="sf-dg" style="background:rgba(255,255,255,.04)"></div><button class="sf-db" id="sf-dR2">&#9658;</button></div>
-                  <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dD2">&#9660;</button><div class="sf-dg"></div></div>
                 </div>
               </div>
+            </div><!-- /sf-game-area -->
 
-              <!-- SCOREBOARD -->
-              <div id="sf-sbp">
-                <div class="sf-sbh">
-                  <div class="sf-sbt">&#9889; LEADERBOARD</div>
-                </div>
-                <div id="sf-sbcontent"><div class="sf-sbmpty">No scores yet &mdash; be the first!</div></div>
+            <!-- MOBILE D-PAD -->
+            <div id="sf-mobile-dpad">
+              <div class="sf-dw">
+                <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dU2">&#9650;</button><div class="sf-dg"></div></div>
+                <div class="sf-dr"><button class="sf-db" id="sf-dL2">&#9668;</button><div class="sf-dg" style="background:rgba(255,255,255,.05)"></div><button class="sf-db" id="sf-dR2">&#9658;</button></div>
+                <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dD2">&#9660;</button><div class="sf-dg"></div></div>
               </div>
+            </div>
 
-              <!-- GitHub Gist info -->
+            <!-- MOBILE COLORS -->
+            <div id="sf-mobile-colors">
+              <div class="sf-color-group"><div class="sf-plabel">Snake Color</div><div class="sf-swatches" id="sf-snakesw-m"></div></div>
+              <div class="sf-color-group"><div class="sf-plabel">Frog Color</div><div class="sf-swatches" id="sf-frogsw-m"></div></div>
+            </div>
 
-            </div><!-- /sf-wrap -->
-          </div><!-- /sf-scaler -->
+            <!-- SCOREBOARD -->
+            <div id="sf-sbp">
+              <div class="sf-sbh"><div class="sf-sbt">&#9889; LEADERBOARD</div></div>
+              <div id="sf-sbcontent"><div class="sf-sbmpty">No scores yet &mdash; be the first!</div></div>
+            </div>
+
+          </div><!-- /sf-wrap -->
         </div><!-- /sf-root -->
-
       </div><!-- /container -->
     </section>
 
@@ -1229,27 +1196,40 @@
     (function(){
     "use strict";
 
-    // ── RESPONSIVE CANVAS SCALING ─────────────────────────
-    var GAME_W = 840; // design width of the full game layout
-    function scaleGame() {
-      var scaler  = document.getElementById('sf-scaler');
-      var root    = document.getElementById('sf-root');
-      var avail   = root.offsetWidth;
-      // clamp scale between 0.35 and 1
-      var scale   = Math.min(1, Math.max(0.35, avail / GAME_W));
-      scaler.style.transform = 'scale(' + scale + ')';
-      scaler.style.height    = (scaler.scrollHeight * scale) + 'px';
-      // update canvas pixel size to fit nicely at any scale
-    }
-    window.addEventListener('resize', scaleGame);
-    // run after fonts load
-    window.addEventListener('load', scaleGame);
-    setTimeout(scaleGame, 300);
-
-    // ── CANVAS ────────────────────────────────────────────
+    // ── RESPONSIVE CANVAS SIZING ──────────────────────────
+    // On mobile, resize the canvas to fill available width.
+    // On desktop it stays at 400×400. CELL recalculates accordingly.
     var canvas = document.getElementById('sf-gc');
     var ctx    = canvas.getContext('2d');
-    var COLS = 20, ROWS = 20, CELL = canvas.width / COLS;
+    var COLS = 20, ROWS = 20;
+    var CELL;
+
+    function resizeCanvas() {
+      var cw    = document.getElementById('sf-cw');
+      var wrap  = document.getElementById('sf-wrap');
+      var isMobile = window.innerWidth <= 680;
+      var size;
+      if (isMobile) {
+        // use full inner width minus padding
+        var padH = 24; // sf-wrap padding left+right
+        size = Math.min(wrap.offsetWidth - padH, window.innerWidth - 32);
+        size = Math.floor(size / COLS) * COLS; // snap to grid
+        size = Math.max(size, 200);
+      } else {
+        size = 400;
+      }
+      canvas.width  = size;
+      canvas.height = size;
+      canvas.style.width  = size + 'px';
+      canvas.style.height = size + 'px';
+      CELL = size / COLS;
+      if (!gameRunning) drawGrid();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('load',   resizeCanvas);
+    setTimeout(resizeCanvas, 200);
+
 
     // ── CONSTANTS ─────────────────────────────────────────
     var HOP_MS     = 5000;
@@ -1339,8 +1319,8 @@
       arr.forEach(function(s, i) {
         html += '<tr class="'+(i===0?'sf-g1':'')+'"><td class="sf-sbrank">'+(medals[i]||(i+1))+'</td>'
               + '<td>'+s.name+'</td>'
-              + '<td style="font-size:13px;color:var(--gdm)">'+(s.time||'--')+'</td>'
-              + '<td style="font-size:13px;color:var(--gdm)">'+s.len+'</td>'
+              + '<td style="font-size:13px;color:var(--gdm);text-shadow:none">'+(s.time||'--')+'</td>'
+              + '<td style="font-size:13px;color:var(--gdm);text-shadow:none">'+s.len+'</td>'
               + '<td>'+s.score+'</td></tr>';
       });
       html += '</tbody></table>';
@@ -1707,25 +1687,25 @@
     <!-- Experience Section -->
     <section class="experience full-screen-section" id="experience">
         <div class="container">
-            <h2 class="section-title">Professional Experience</h2>
+            <h2 class="section-title" data-i18n="exp_title">Professional Experience</h2>
             <div class="experience-container">
                 <div class="experience-card">
                     <div class="exp-date">Dec 2022 - Apr 2023</div>
-                    <h3 class="exp-title">Junior Database Manager & IT Support</h3>
+                    <h3 class="exp-title" data-i18n="exp1_role">Junior Database Manager & IT Support</h3>
                     <span class="exp-company">Bonfire Technology, London, UK</span>
-                    <p class="exp-desc">Managed and optimized organizational databases, ensuring data accuracy and security. Provided comprehensive IT support, resolving hardware/software issues to minimize operational downtime. Collaborated with cross-functional teams to streamline data workflows and improve documentation processes.</p>
+                    <p class="exp-desc" data-i18n="exp1_desc">Managed and optimized organizational databases, ensuring data accuracy and security. Provided comprehensive IT support, resolving hardware/software issues to minimize operational downtime. Collaborated with cross-functional teams to streamline data workflows and improve documentation processes.</p>
                 </div>
                 <div class="experience-card">
                     <div class="exp-date">2019 - 2024</div>
-                    <h3 class="exp-title">Business Manager</h3>
+                    <h3 class="exp-title" data-i18n="exp2_role">Business Manager</h3>
                     <span class="exp-company">Bright Night Trade Link</span>
-                    <p class="exp-desc">Managed CRM Database including troubleshooting, maintenance, updates, and report generation. Oversaw inventory activities and streamlined business operations for optimal performance.</p>
+                    <p class="exp-desc" data-i18n="exp2_desc">Managed CRM Database including troubleshooting, maintenance, updates, and report generation. Oversaw inventory activities and streamlined business operations for optimal performance.</p>
                 </div>
                 <div class="experience-card">
                     <div class="exp-date">2021 - Present</div>
-                    <h3 class="exp-title">Freelance Web Developer</h3>
+                    <h3 class="exp-title" data-i18n="exp3_role">Freelance Web Developer</h3>
                     <span class="exp-company">Self-Employed</span>
-                    <p class="exp-desc">Designed and deployed responsive websites using WordPress, HTML/CSS, and JavaScript. Implemented UX improvements and fixed critical bugs to enhance site performance. Developed custom solutions for clients across various industries.</p>
+                    <p class="exp-desc" data-i18n="exp3_desc">Designed and deployed responsive websites using WordPress, HTML/CSS, and JavaScript. Implemented UX improvements and fixed critical bugs to enhance site performance. Developed custom solutions for clients across various industries.</p>
                 </div>
             </div>
         </div>
@@ -1734,15 +1714,15 @@
     <!-- Projects Section -->
     <section class="projects full-screen-section" id="projects">
         <div class="container">
-            <h2 class="section-title">My Projects</h2>
+            <h2 class="section-title" data-i18n="proj_title">My Projects</h2>
             <div class="projects-grid">
                 <div class="project-card">
                     <div class="project-img">
                         <i class="fas fa-brain"></i>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">Natural Language Processing Tool</h3>
-                        <p class="project-desc">Developed Python-based text analysis application using NLP libraries. Implemented machine learning algorithms for sentiment analysis and contextual understanding.</p>
+                        <h3 class="project-title" data-i18n="proj1_title">Natural Language Processing Tool</h3>
+                        <p class="project-desc" data-i18n="proj1_desc">Developed Python-based text analysis application using NLP libraries. Implemented machine learning algorithms for sentiment analysis and contextual understanding.</p>
                         <div class="project-tech">
                             <span>Python</span>
                             <span>NLP</span>
@@ -1760,8 +1740,8 @@
                         <i class="fas fa-database"></i>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">Inventory Management Database</h3>
-                        <p class="project-desc">Designed relational database system with SQL for efficient data querying and reporting. Created user-friendly front-end interface using Python for seamless interaction.</p>
+                        <h3 class="project-title" data-i18n="proj2_title">Inventory Management Database</h3>
+                        <p class="project-desc" data-i18n="proj2_desc">Designed relational database system with SQL for efficient data querying and reporting. Created user-friendly front-end interface using Python for seamless interaction.</p>
                         <div class="project-tech">
                             <span>SQL</span>
                             <span>Python</span>
@@ -1779,8 +1759,8 @@
                         <i class="fas fa-language"></i>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">RNN Translation System</h3>
-                        <p class="project-desc">Undergraduate final project exploring the potential of Recurrent Neural Networks to improve translation accuracy and preserve contextual nuances.</p>
+                        <h3 class="project-title" data-i18n="proj3_title">RNN Translation System</h3>
+                        <p class="project-desc" data-i18n="proj3_desc">Undergraduate final project exploring the potential of Recurrent Neural Networks to improve translation accuracy and preserve contextual nuances.</p>
                         <div class="project-tech">
                             <span>Python</span>
                             <span>RNN</span>
@@ -1804,25 +1784,25 @@
     <!-- Education Section -->
     <section class="education full-screen-section" id="education">
         <div class="container">
-            <h2 class="section-title">Education</h2>
+            <h2 class="section-title" data-i18n="edu_title">Education</h2>
             <div class="education-grid">
                 <div class="education-card">
                     <div class="education-icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
-                    <h3 class="education-title">MSc Software Engineering</h3>
+                    <h3 class="education-title" data-i18n="edu1_degree">MSc Software Engineering</h3>
                     <p class="education-institution">Regent's College London</p>
                     <p class="education-date">April 2025 - May 2026 (Expected)</p>
-                    <p class="education-desc">Relevant coursework: Software lifecycle management, system security, advanced databases, and emerging technologies.</p>
+                    <p class="education-desc" data-i18n="edu1_desc">Relevant coursework: Software lifecycle management, system security, advanced databases, and emerging technologies.</p>
                 </div>
                 <div class="education-card">
                     <div class="education-icon">
                         <i class="fas fa-university"></i>
                     </div>
-                    <h3 class="education-title">BSc (Hons) Computing Science & Software Engineering</h3>
+                    <h3 class="education-title" data-i18n="edu2_degree">BSc (Hons) Computing Science & Software Engineering</h3>
                     <p class="education-institution">University of Bedfordshire</p>
                     <p class="education-date">September 2021 - September 2024</p>
-                    <p class="education-desc">Graduated with 2:1 classification. Key subjects: Data structures, algorithms, computer networks, Python programming, and software engineering principles.</p>
+                    <p class="education-desc" data-i18n="edu2_desc">Graduated with 2:1 classification. Key subjects: Data structures, algorithms, computer networks, Python programming, and software engineering principles.</p>
                 </div>
             </div>
         </div>
@@ -1831,7 +1811,7 @@
     <!-- Contact Section -->
     <section class="contact full-screen-section" id="contact">
         <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
+            <h2 class="section-title" data-i18n="contact_title">Get In Touch</h2>
             <div class="contact-grid">
                 <div class="contact-info">
                     <div class="contact-item">
@@ -1839,7 +1819,7 @@
                             <i class="fas fa-envelope"></i>
                         </div>
                         <div>
-                            <h3>Email</h3>
+                            <h3 data-i18n="contact_email">Email</h3>
                             <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a6d6d4c7ccd1c7cad6c9d3c2c3ca969f9694e6c1cbc7cfca88c5c9cb">[email&#160;protected]</a></p>
                         </div>
                     </div>
@@ -1848,7 +1828,7 @@
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
                         <div>
-                            <h3>Location</h3>
+                            <h3 data-i18n="contact_location">Location</h3>
                             <p>Uxbridge, UK</p>
                         </div>
                     </div>
@@ -1857,25 +1837,25 @@
                             <i class="fas fa-phone"></i>
                         </div>
                         <div>
-                            <h3>Phone</h3>
+                            <h3 data-i18n="contact_phone">Phone</h3>
                             <p>+44 -------------- </p>
                         </div>
                     </div>
                 </div>
                 <form class="contact-form" id="contact-form">
                     <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" placeholder="Your name" required>
+                        <label for="name" data-i18n="form_name">Name</label>
+                        <input type="text" id="name" placeholder="Your name" data-i18n-ph="form_ph_name" required>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="Your email" required>
+                        <label for="email" data-i18n="form_email">Email</label>
+                        <input type="email" id="email" placeholder="Your email" data-i18n-ph="form_ph_email" required>
                     </div>
                     <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" placeholder="How can I help you?" required></textarea>
+                        <label for="message" data-i18n="form_message">Message</label>
+                        <textarea id="message" placeholder="How can I help you?" data-i18n-ph="form_ph_msg" required></textarea>
                     </div>
-                    <button type="submit" class="btn">Send Message</button>
+                    <button type="submit" class="btn" data-i18n="form_send">Send Message</button>
                 </form>
             </div>
         </div>
@@ -1886,7 +1866,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="copyright">
-                    <p>&copy; 2025 Prajwal Poudel. All rights reserved.</p>
+                    <p data-i18n="footer_copy">&copy; 2025 Prajwal Poudel. All rights reserved.</p>
                 </div>
                 <div class="social-links">
                     <a href="https://github.com/Prajwal0902" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
@@ -1954,69 +1934,431 @@
         document.addEventListener('DOMContentLoaded', function() {
             const projectsContainer = document.getElementById('projects-container');
             const loader = document.querySelector('.loader');
-            
-            // Show loader
-            loader.style.display = 'block';
-            
-            // Fetch GitHub repositories
-            fetch('https://api.github.com/users/Prajwal0902/repos?sort=updated&direction=desc')
-                .then(response => response.json())
-                .then(data => {
-                    // Hide loader
-                    loader.style.display = 'none';
-                    
-                    // Clear the loader
-                    projectsContainer.innerHTML = '';
-                    
-                    // Display projects
-                    data.slice(0, 6).forEach(repo => {
-                        const projectCard = document.createElement('div');
-                        projectCard.className = 'project-card';
-                        
-                        // Determine icon based on repo topics or name
-                        let iconClass = 'fas fa-code';
-                        if (repo.name.toLowerCase().includes('ml') || repo.name.toLowerCase().includes('ai')) {
-                            iconClass = 'fas fa-brain';
-                        } else if (repo.name.toLowerCase().includes('web') || repo.name.toLowerCase().includes('app')) {
-                            iconClass = 'fas fa-laptop-code';
-                        } else if (repo.name.toLowerCase().includes('mobile')) {
-                            iconClass = 'fas fa-mobile-alt';
-                        } else if (repo.name.toLowerCase().includes('data') || repo.name.toLowerCase().includes('db')) {
-                            iconClass = 'fas fa-database';
+
+            function getIcon(name) {
+                name = name.toLowerCase();
+                if (name.includes('ml') || name.includes('ai') || name.includes('rnn') || name.includes('nlp')) return 'fas fa-brain';
+                if (name.includes('web') || name.includes('app') || name.includes('site')) return 'fas fa-laptop-code';
+                if (name.includes('mobile')) return 'fas fa-mobile-alt';
+                if (name.includes('data') || name.includes('db') || name.includes('inventory')) return 'fas fa-database';
+                return 'fas fa-code';
+            }
+
+            function renderRepos(repos) {
+                projectsContainer.innerHTML = '';
+                if (!repos || repos.length === 0) {
+                    projectsContainer.innerHTML = '<p style="color:var(--gray)">No repositories found.</p>';
+                    return;
+                }
+                // filter out forks and profile readme, take top 6
+                const filtered = repos.filter(r => !r.fork && r.name !== 'Prajwal0902').slice(0, 6);
+                filtered.forEach(repo => {
+                    const card = document.createElement('div');
+                    card.className = 'project-card';
+                    const language = repo.language || 'Various';
+                    const desc = repo.description || 'A software development project.';
+                    const liveLink = repo.homepage
+                        ? `<a href="${repo.homepage}" target="_blank" rel="noopener" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>`
+                        : '';
+                    card.innerHTML = `
+                        <div class="project-img"><i class="${getIcon(repo.name)}"></i></div>
+                        <div class="project-content">
+                            <h3 class="project-title">${repo.name.replace(/-/g,' ')}</h3>
+                            <p class="project-desc">${desc}</p>
+                            <div class="project-tech"><span>${language}</span>${repo.stargazers_count > 0 ? `<span>⭐ ${repo.stargazers_count}</span>` : ''}</div>
+                            <div class="project-links">
+                                <a href="${repo.html_url}" target="_blank" rel="noopener" class="project-link"><i class="fab fa-github"></i> View Code</a>
+                                ${liveLink}
+                            </div>
+                        </div>`;
+                    projectsContainer.appendChild(card);
+                });
+            }
+
+            function fetchWithRetry(url, attempts) {
+                return fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
+                    .then(res => {
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.json();
+                    })
+                    .catch(err => {
+                        if (attempts > 1) {
+                            return new Promise(resolve => setTimeout(resolve, 1500))
+                                .then(() => fetchWithRetry(url, attempts - 1));
                         }
-                        
-                        // Get primary language or default to Various
-                        const language = repo.language || 'Various';
-                        
-                        projectCard.innerHTML = `
-                            <div class="project-img">
-                                <i class="${iconClass}"></i>
-                            </div>
-                            <div class="project-content">
-                                <h3 class="project-title">${repo.name}</h3>
-                                <p class="project-desc">${repo.description || 'A software development project.'}</p>
-                                <div class="project-tech">
-                                    <span>${language}</span>
-                                </div>
-                                <div class="project-links">
-                                    <a href="${repo.html_url}" target="_blank" class="project-link">
-                                        <i class="fab fa-github"></i> View Code
-                                    </a>
-                                    ${repo.homepage ? `<a href="${repo.homepage}" target="_blank" class="project-link">
-                                        <i class="fas fa-external-link-alt"></i> Live Demo
-                                    </a>` : ''}
-                                </div>
-                            </div>
-                        `;
-                        
-                        projectsContainer.appendChild(projectCard);
+                        throw err;
                     });
-                    
-                    // If no repos found, show a message
-                    if (data.length === 0) {
-                        projectsContainer.innerHTML = '<p>No projects found on GitHub.</p>';
-                    }
+            }
+
+            if (loader) loader.style.display = 'block';
+
+            fetchWithRetry('https://api.github.com/users/Prajwal0902/repos?sort=updated&per_page=20&direction=desc', 3)
+                .then(data => {
+                    if (loader) loader.style.display = 'none';
+                    renderRepos(data);
                 })
-                .catch(error => {
-                    console.error('Error fetching GitHub projects:', error);
-                    loader.style.display = 'none';
+                .catch(() => {
+                    if (loader) loader.style.display = 'none';
+                    // Silently hide the extra container — the 3 hand-coded cards above still show
+                    projectsContainer.innerHTML = '';
+                });
+        });
+    </script>
+
+    <!-- ── TRANSLATION SYSTEM ── -->
+    <script>
+    (function(){
+    'use strict';
+
+    var TRANSLATIONS = {
+      en: {
+        nav_home:'Home', nav_about:'About', nav_experience:'Experience',
+        nav_projects:'Projects', nav_education:'Education', nav_contact:'Contact',
+        hero_title:'Software Engineer & Business Manager',
+        hero_sub1:'MSc Software Engineering graduate with expertise in Python, SQL, and full-stack development.',
+        hero_sub2:'Passionate about building user-centric applications and leveraging emerging technologies like NLP/ML to solve real-world problems.',
+        hero_btn:'View My Work',
+        about_title:'About Me',
+        about_p1:"I'm Prajwal Poudel, a Software Engineering graduate (MSc) with expertise in Python, SQL, and full-stack development, complemented by hands-on experience in database management, IT support, and web/app development.",
+        about_p2:"My professional journey has equipped me with strong problem-solving abilities, process optimization skills, and experience in collaborative project delivery. I'm passionate about building user-centric applications and leveraging emerging technologies like NLP and machine learning to create innovative solutions.",
+        about_p3:"With experience as both a software developer and business manager, I bring a unique perspective to projects, understanding both the technical requirements and business objectives needed for success.",
+        game_title:'Snake & Frog', game_sub:'Take a break — eat frogs, dodge fire, outsmart tornadoes.',
+        exp_title:'Professional Experience',
+        exp1_role:'Junior Database Manager & IT Support',
+        exp1_desc:'Managed and optimized organizational databases, ensuring data accuracy and security. Provided comprehensive IT support, resolving hardware/software issues to minimize operational downtime. Collaborated with cross-functional teams to streamline data workflows and improve documentation processes.',
+        exp2_role:'Business Manager',
+        exp2_desc:'Managed CRM Database including troubleshooting, maintenance, updates, and report generation. Oversaw inventory activities and streamlined business operations for optimal performance.',
+        exp3_role:'Freelance Web Developer',
+        exp3_desc:'Designed and deployed responsive websites using WordPress, HTML/CSS, and JavaScript. Implemented UX improvements and fixed critical bugs to enhance site performance. Developed custom solutions for clients across various industries.',
+        proj_title:'My Projects',
+        proj1_title:'Natural Language Processing Tool',
+        proj1_desc:'Developed Python-based text analysis application using NLP libraries. Implemented machine learning algorithms for sentiment analysis and contextual understanding.',
+        proj2_title:'Inventory Management Database',
+        proj2_desc:'Designed relational database system with SQL for efficient data querying and reporting. Created user-friendly front-end interface using Python for seamless interaction.',
+        proj3_title:'RNN Translation System',
+        proj3_desc:'Undergraduate final project exploring the potential of Recurrent Neural Networks to improve translation accuracy and preserve contextual nuances.',
+        edu_title:'Education',
+        edu1_degree:'MSc Software Engineering',
+        edu1_desc:'Relevant coursework: Software lifecycle management, system security, advanced databases, and emerging technologies.',
+        edu2_degree:'BSc (Hons) Computing Science & Software Engineering',
+        edu2_desc:'Graduated with 2:1 classification. Key subjects: Data structures, algorithms, computer networks, Python programming, and software engineering principles.',
+        contact_title:'Get In Touch', contact_email:'Email', contact_location:'Location', contact_phone:'Phone',
+        form_name:'Name', form_email:'Email', form_message:'Message', form_send:'Send Message',
+        form_ph_name:'Your name', form_ph_email:'Your email', form_ph_msg:'How can I help you?',
+        footer_copy:'© 2025 Prajwal Poudel. All rights reserved.'
+      },
+
+      es: {
+        nav_home:'Inicio', nav_about:'Sobre mí', nav_experience:'Experiencia',
+        nav_projects:'Proyectos', nav_education:'Educación', nav_contact:'Contacto',
+        hero_title:'Ingeniero de Software & Gerente de Negocios',
+        hero_sub1:'Graduado con MSc en Ingeniería de Software con experiencia en Python, SQL y desarrollo full-stack.',
+        hero_sub2:'Apasionado por construir aplicaciones centradas en el usuario y aprovechar tecnologías emergentes como NLP/ML para resolver problemas del mundo real.',
+        hero_btn:'Ver mi trabajo',
+        about_title:'Sobre mí',
+        about_p1:'Soy Prajwal Poudel, graduado en Ingeniería de Software (MSc) con experiencia en Python, SQL y desarrollo full-stack, complementado con experiencia práctica en gestión de bases de datos, soporte de TI y desarrollo web/app.',
+        about_p2:'Mi trayectoria profesional me ha dotado de sólidas habilidades para resolver problemas, optimizar procesos y trabajar en proyectos colaborativos. Me apasiona crear aplicaciones centradas en el usuario y aprovechar tecnologías emergentes como NLP y machine learning.',
+        about_p3:'Con experiencia como desarrollador de software y gerente de negocios, aporto una perspectiva única a los proyectos, entendiendo tanto los requisitos técnicos como los objetivos empresariales.',
+        game_title:'Serpiente & Rana', game_sub:'Tómate un descanso — come ranas, esquiva el fuego, vence a los tornados.',
+        exp_title:'Experiencia Profesional',
+        exp1_role:'Gestor de Base de Datos Junior & Soporte TI',
+        exp1_desc:'Gestioné y optimicé bases de datos organizacionales, garantizando la precisión y seguridad de los datos. Brindé soporte de TI integral, resolviendo problemas de hardware/software para minimizar el tiempo de inactividad.',
+        exp2_role:'Gerente de Negocios',
+        exp2_desc:'Gestioné la base de datos CRM incluyendo resolución de problemas, mantenimiento, actualizaciones y generación de informes. Supervisé las actividades de inventario y optimicé las operaciones comerciales.',
+        exp3_role:'Desarrollador Web Freelance',
+        exp3_desc:'Diseñé y desplegué sitios web responsivos usando WordPress, HTML/CSS y JavaScript. Implementé mejoras de UX y corregí errores críticos para mejorar el rendimiento del sitio.',
+        proj_title:'Mis Proyectos',
+        proj1_title:'Herramienta de Procesamiento de Lenguaje Natural',
+        proj1_desc:'Desarrollé una aplicación de análisis de texto basada en Python usando bibliotecas de NLP. Implementé algoritmos de machine learning para análisis de sentimientos.',
+        proj2_title:'Base de Datos de Gestión de Inventario',
+        proj2_desc:'Diseñé un sistema de base de datos relacional con SQL para consultas y reportes eficientes. Creé una interfaz de usuario en Python para una interacción fluida.',
+        proj3_title:'Sistema de Traducción RNN',
+        proj3_desc:'Proyecto final de pregrado que explora el potencial de las Redes Neuronales Recurrentes para mejorar la precisión de la traducción y preservar los matices contextuales.',
+        edu_title:'Educación', edu1_degree:'MSc en Ingeniería de Software',
+        edu1_desc:'Cursos relevantes: gestión del ciclo de vida del software, seguridad de sistemas, bases de datos avanzadas y tecnologías emergentes.',
+        edu2_degree:'BSc (Hons) Ciencias de la Computación e Ingeniería de Software',
+        edu2_desc:'Graduado con clasificación 2:1. Materias clave: estructuras de datos, algoritmos, redes informáticas, programación en Python y principios de ingeniería de software.',
+        contact_title:'Contáctame', contact_email:'Correo', contact_location:'Ubicación', contact_phone:'Teléfono',
+        form_name:'Nombre', form_email:'Correo electrónico', form_message:'Mensaje', form_send:'Enviar mensaje',
+        form_ph_name:'Tu nombre', form_ph_email:'Tu correo', form_ph_msg:'¿Cómo puedo ayudarte?',
+        footer_copy:'© 2025 Prajwal Poudel. Todos los derechos reservados.'
+      },
+
+      fr: {
+        nav_home:'Accueil', nav_about:'À propos', nav_experience:'Expérience',
+        nav_projects:'Projets', nav_education:'Formation', nav_contact:'Contact',
+        hero_title:'Ingénieur Logiciel & Directeur Commercial',
+        hero_sub1:'Diplômé MSc en Génie Logiciel, expert en Python, SQL et développement full-stack.',
+        hero_sub2:'Passionné par la création d\'applications centrées sur l\'utilisateur et l\'exploitation des technologies émergentes comme le NLP/ML pour résoudre des problèmes réels.',
+        hero_btn:'Voir mon travail',
+        about_title:'À propos de moi',
+        about_p1:'Je suis Prajwal Poudel, diplômé en génie logiciel (MSc) avec une expertise en Python, SQL et développement full-stack, complétée par une expérience pratique en gestion de bases de données, support informatique et développement web/app.',
+        about_p2:'Mon parcours professionnel m\'a doté de solides compétences en résolution de problèmes, en optimisation des processus et en livraison de projets collaboratifs. Je suis passionné par la création d\'applications centrées sur l\'utilisateur.',
+        about_p3:'Fort d\'une expérience à la fois en tant que développeur logiciel et directeur commercial, j\'apporte une perspective unique aux projets, comprenant à la fois les exigences techniques et les objectifs commerciaux.',
+        game_title:'Serpent & Grenouille', game_sub:'Faites une pause — mangez des grenouilles, esquivez le feu, battez les tornades.',
+        exp_title:'Expérience Professionnelle',
+        exp1_role:'Gestionnaire de Base de Données Junior & Support IT',
+        exp1_desc:'Géré et optimisé les bases de données organisationnelles, assurant la précision et la sécurité des données. Fourni un support informatique complet, résolvant les problèmes matériels/logiciels.',
+        exp2_role:'Directeur Commercial',
+        exp2_desc:'Géré la base de données CRM incluant le dépannage, la maintenance, les mises à jour et la génération de rapports. Supervisé les activités d\'inventaire et optimisé les opérations commerciales.',
+        exp3_role:'Développeur Web Freelance',
+        exp3_desc:'Conçu et déployé des sites web responsifs en utilisant WordPress, HTML/CSS et JavaScript. Mis en œuvre des améliorations UX et corrigé des bugs critiques pour améliorer les performances.',
+        proj_title:'Mes Projets',
+        proj1_title:'Outil de Traitement du Langage Naturel',
+        proj1_desc:'Développé une application d\'analyse de texte basée sur Python utilisant des bibliothèques NLP. Implémenté des algorithmes de machine learning pour l\'analyse des sentiments.',
+        proj2_title:'Base de Données de Gestion des Stocks',
+        proj2_desc:'Conçu un système de base de données relationnelle avec SQL pour des requêtes et des rapports efficaces. Créé une interface conviviale en Python.',
+        proj3_title:'Système de Traduction RNN',
+        proj3_desc:'Projet de fin d\'études explorant le potentiel des Réseaux de Neurones Récurrents pour améliorer la précision de la traduction et préserver les nuances contextuelles.',
+        edu_title:'Formation', edu1_degree:'MSc Génie Logiciel',
+        edu1_desc:'Cours pertinents : gestion du cycle de vie logiciel, sécurité des systèmes, bases de données avancées et technologies émergentes.',
+        edu2_degree:'BSc (Hons) Informatique & Génie Logiciel',
+        edu2_desc:'Diplômé avec mention 2:1. Matières clés : structures de données, algorithmes, réseaux informatiques, programmation Python et principes de génie logiciel.',
+        contact_title:'Me Contacter', contact_email:'E-mail', contact_location:'Localisation', contact_phone:'Téléphone',
+        form_name:'Nom', form_email:'E-mail', form_message:'Message', form_send:'Envoyer le message',
+        form_ph_name:'Votre nom', form_ph_email:'Votre e-mail', form_ph_msg:'Comment puis-je vous aider?',
+        footer_copy:'© 2025 Prajwal Poudel. Tous droits réservés.'
+      },
+
+      de: {
+        nav_home:'Startseite', nav_about:'Über mich', nav_experience:'Erfahrung',
+        nav_projects:'Projekte', nav_education:'Ausbildung', nav_contact:'Kontakt',
+        hero_title:'Software-Ingenieur & Geschäftsführer',
+        hero_sub1:'MSc-Absolvent in Software Engineering mit Expertise in Python, SQL und Full-Stack-Entwicklung.',
+        hero_sub2:'Leidenschaftlich daran interessiert, benutzerzentrierte Anwendungen zu erstellen und neue Technologien wie NLP/ML zu nutzen, um reale Probleme zu lösen.',
+        hero_btn:'Meine Arbeit ansehen',
+        about_title:'Über mich',
+        about_p1:'Ich bin Prajwal Poudel, ein Software-Engineering-Absolvent (MSc) mit Expertise in Python, SQL und Full-Stack-Entwicklung, ergänzt durch praktische Erfahrung in Datenbankmanagement, IT-Support und Web-/App-Entwicklung.',
+        about_p2:'Mein beruflicher Werdegang hat mich mit starken Problemlösungsfähigkeiten, Prozessoptimierungskompetenz und Erfahrung in kollaborativer Projektdurchführung ausgestattet.',
+        about_p3:'Mit Erfahrung sowohl als Softwareentwickler als auch als Geschäftsführer bringe ich eine einzigartige Perspektive in Projekte ein und verstehe sowohl technische Anforderungen als auch Geschäftsziele.',
+        game_title:'Schlange & Frosch', game_sub:'Mach eine Pause — fang Frösche, weiche Feuer aus, besiege Tornados.',
+        exp_title:'Berufserfahrung',
+        exp1_role:'Junior-Datenbankmanager & IT-Support',
+        exp1_desc:'Verwaltete und optimierte organisatorische Datenbanken und gewährleistete Datengenauigkeit und -sicherheit. Bot umfassenden IT-Support und löste Hardware-/Softwareprobleme zur Minimierung von Ausfallzeiten.',
+        exp2_role:'Geschäftsführer',
+        exp2_desc:'Verwaltete CRM-Datenbank einschließlich Fehlerbehebung, Wartung, Updates und Berichterstellung. Überwachte Lageraktivitäten und optimierte Geschäftsprozesse.',
+        exp3_role:'Freiberuflicher Webentwickler',
+        exp3_desc:'Entwarf und implementierte responsive Websites mit WordPress, HTML/CSS und JavaScript. Implementierte UX-Verbesserungen und behob kritische Fehler zur Leistungssteigerung.',
+        proj_title:'Meine Projekte',
+        proj1_title:'Werkzeug zur Verarbeitung natürlicher Sprache',
+        proj1_desc:'Entwickelte Python-basierte Textanalyse-Anwendung mit NLP-Bibliotheken. Implementierte Machine-Learning-Algorithmen für Sentiment-Analyse.',
+        proj2_title:'Inventarverwaltungsdatenbank',
+        proj2_desc:'Entwarf relationales Datenbanksystem mit SQL für effiziente Abfragen und Berichte. Erstellte benutzerfreundliche Python-Oberfläche.',
+        proj3_title:'RNN-Übersetzungssystem',
+        proj3_desc:'Abschlussprojekt, das das Potenzial rekurrenter neuronaler Netze zur Verbesserung der Übersetzungsgenauigkeit untersucht.',
+        edu_title:'Ausbildung', edu1_degree:'MSc Software Engineering',
+        edu1_desc:'Relevante Kurse: Software-Lebenszyklusmanagement, Systemsicherheit, erweiterte Datenbanken und aufkommende Technologien.',
+        edu2_degree:'BSc (Hons) Informatik & Software Engineering',
+        edu2_desc:'Abschluss mit 2:1-Bewertung. Hauptfächer: Datenstrukturen, Algorithmen, Computernetzwerke, Python-Programmierung und Software-Engineering-Prinzipien.',
+        contact_title:'Kontakt aufnehmen', contact_email:'E-Mail', contact_location:'Standort', contact_phone:'Telefon',
+        form_name:'Name', form_email:'E-Mail', form_message:'Nachricht', form_send:'Nachricht senden',
+        form_ph_name:'Ihr Name', form_ph_email:'Ihre E-Mail', form_ph_msg:'Wie kann ich Ihnen helfen?',
+        footer_copy:'© 2025 Prajwal Poudel. Alle Rechte vorbehalten.'
+      },
+
+      nl: {
+        nav_home:'Startpagina', nav_about:'Over mij', nav_experience:'Ervaring',
+        nav_projects:'Projecten', nav_education:'Opleiding', nav_contact:'Contact',
+        hero_title:'Software Engineer & Bedrijfsmanager',
+        hero_sub1:'MSc-afgestudeerde in Software Engineering met expertise in Python, SQL en full-stack ontwikkeling.',
+        hero_sub2:'Gepassioneerd door het bouwen van gebruikersgerichte applicaties en het benutten van nieuwe technologieën zoals NLP/ML om echte problemen op te lossen.',
+        hero_btn:'Bekijk mijn werk',
+        about_title:'Over mij',
+        about_p1:'Ik ben Prajwal Poudel, een Software Engineering-afgestudeerde (MSc) met expertise in Python, SQL en full-stack ontwikkeling, aangevuld met praktijkervaring in databasebeheer, IT-ondersteuning en web-/app-ontwikkeling.',
+        about_p2:'Mijn professionele reis heeft me uitgerust met sterke probleemoplossingsvaardigheden, procesoptimalisatie en ervaring in collaboratieve projectoplevering.',
+        about_p3:'Met ervaring als zowel softwareontwikkelaar als bedrijfsmanager breng ik een uniek perspectief mee dat zowel technische vereisten als zakelijke doelstellingen begrijpt.',
+        game_title:'Slang & Kikker', game_sub:'Neem een pauze — eet kikkers, ontwijkt vuur, verslaat tornado\'s.',
+        exp_title:'Professionele Ervaring',
+        exp1_role:'Junior Databasebeheerder & IT-ondersteuning',
+        exp1_desc:'Beheerde en optimaliseerde organisatorische databases, waarbij nauwkeurigheid en veiligheid werden gewaarborgd. Bood uitgebreide IT-ondersteuning en loste hardware-/softwareproblemen op.',
+        exp2_role:'Bedrijfsmanager',
+        exp2_desc:'Beheerde CRM-database inclusief probleemoplossing, onderhoud, updates en rapportgeneratie. Overzag voorraadactiviteiten en stroomlijnde bedrijfsprocessen.',
+        exp3_role:'Freelance Webontwikkelaar',
+        exp3_desc:'Ontwierp en implementeerde responsieve websites met WordPress, HTML/CSS en JavaScript. Implementeerde UX-verbeteringen en loste kritieke bugs op.',
+        proj_title:'Mijn Projecten',
+        proj1_title:'Natural Language Processing Tool',
+        proj1_desc:'Ontwikkelde Python-gebaseerde tekstanalysetoepassing met NLP-bibliotheken. Implementeerde machine learning-algoritmen voor sentimentanalyse.',
+        proj2_title:'Voorraadbeheerdatabase',
+        proj2_desc:'Ontwierp relationeel databasesysteem met SQL voor efficiënte query\'s en rapportages. Creëerde gebruiksvriendelijke Python-interface.',
+        proj3_title:'RNN Vertaalsysteem',
+        proj3_desc:'Afstudeerproject dat het potentieel van Recurrente Neurale Netwerken onderzoekt om de vertaalnauwkeurigheid te verbeteren.',
+        edu_title:'Opleiding', edu1_degree:'MSc Software Engineering',
+        edu1_desc:'Relevante vakken: softwarelevenscyclusbeheer, systeembeveiliging, geavanceerde databases en opkomende technologieën.',
+        edu2_degree:'BSc (Hons) Computerwetenschappen & Software Engineering',
+        edu2_desc:'Afgestudeerd met 2:1-classificatie. Hoofdvakken: datastructuren, algoritmen, computernetwerken, Python-programmering en software engineering-principes.',
+        contact_title:'Neem contact op', contact_email:'E-mail', contact_location:'Locatie', contact_phone:'Telefoon',
+        form_name:'Naam', form_email:'E-mail', form_message:'Bericht', form_send:'Bericht verzenden',
+        form_ph_name:'Uw naam', form_ph_email:'Uw e-mail', form_ph_msg:'Hoe kan ik u helpen?',
+        footer_copy:'© 2025 Prajwal Poudel. Alle rechten voorbehouden.'
+      },
+
+      zh: {
+        nav_home:'首页', nav_about:'关于我', nav_experience:'经验',
+        nav_projects:'项目', nav_education:'教育', nav_contact:'联系',
+        hero_title:'软件工程师 & 商业经理',
+        hero_sub1:'MSc软件工程毕业生，精通Python、SQL和全栈开发。',
+        hero_sub2:'热衷于构建以用户为中心的应用程序，并利用NLP/ML等新兴技术解决实际问题。',
+        hero_btn:'查看我的作品',
+        about_title:'关于我',
+        about_p1:'我是Prajwal Poudel，软件工程硕士毕业生，精通Python、SQL和全栈开发，具有数据库管理、IT支持和Web/App开发的实践经验。',
+        about_p2:'我的职业历程让我具备了强大的问题解决能力、流程优化技能和协作项目交付经验。我热衷于构建以用户为中心的应用程序，并利用NLP和机器学习等新兴技术创造创新解决方案。',
+        about_p3:'作为既有软件开发经验又有商业管理经验的专业人士，我为项目带来独特视角，深刻理解技术需求和业务目标。',
+        game_title:'蛇与青蛙', game_sub:'休息一下——吃青蛙、躲避火焰、智胜龙卷风。',
+        exp_title:'专业经验',
+        exp1_role:'初级数据库管理员 & IT支持',
+        exp1_desc:'管理和优化组织数据库，确保数据准确性和安全性。提供全面的IT支持，解决硬件/软件问题以减少停机时间。与跨职能团队合作，优化数据工作流程。',
+        exp2_role:'商业经理',
+        exp2_desc:'管理CRM数据库，包括故障排除、维护、更新和报告生成。监督库存活动，优化业务运营以实现最佳性能。',
+        exp3_role:'自由职业网页开发者',
+        exp3_desc:'使用WordPress、HTML/CSS和JavaScript设计和部署响应式网站。实施UX改进，修复关键错误以提升网站性能。为各行业客户开发定制解决方案。',
+        proj_title:'我的项目',
+        proj1_title:'自然语言处理工具',
+        proj1_desc:'使用NLP库开发了基于Python的文本分析应用程序。实现了用于情感分析和上下文理解的机器学习算法。',
+        proj2_title:'库存管理数据库',
+        proj2_desc:'设计了使用SQL的关系数据库系统，用于高效的数据查询和报告。使用Python创建了用户友好的前端界面。',
+        proj3_title:'RNN翻译系统',
+        proj3_desc:'本科毕业项目，探索递归神经网络提高翻译准确性和保留上下文细微差别的潜力。',
+        edu_title:'教育', edu1_degree:'MSc软件工程',
+        edu1_desc:'相关课程：软件生命周期管理、系统安全、高级数据库和新兴技术。',
+        edu2_degree:'BSc（荣誉）计算机科学与软件工程',
+        edu2_desc:'以2:1等级毕业。主要科目：数据结构、算法、计算机网络、Python编程和软件工程原理。',
+        contact_title:'联系我', contact_email:'电子邮件', contact_location:'地址', contact_phone:'电话',
+        form_name:'姓名', form_email:'电子邮件', form_message:'消息', form_send:'发送消息',
+        form_ph_name:'您的姓名', form_ph_email:'您的电子邮件', form_ph_msg:'我可以为您提供什么帮助？',
+        footer_copy:'© 2025 Prajwal Poudel. 版权所有。'
+      },
+
+      ja: {
+        nav_home:'ホーム', nav_about:'自己紹介', nav_experience:'経験',
+        nav_projects:'プロジェクト', nav_education:'学歴', nav_contact:'お問い合わせ',
+        hero_title:'ソフトウェアエンジニア & ビジネスマネージャー',
+        hero_sub1:'Python、SQL、フルスタック開発の専門知識を持つMScソフトウェアエンジニアリング卒業生。',
+        hero_sub2:'NLP/MLなどの新興技術を活用してユーザー中心のアプリケーションを構築し、現実の問題を解決することに情熱を持っています。',
+        hero_btn:'私の作品を見る',
+        about_title:'自己紹介',
+        about_p1:'私はPrajwal Poudelです。Python、SQL、フルスタック開発の専門知識を持つソフトウェアエンジニアリング修士（MSc）卒業生であり、データベース管理、ITサポート、Web/アプリ開発の実践的な経験もあります。',
+        about_p2:'私の職業経験を通じて、強力な問題解決能力、プロセス最適化スキル、協調的なプロジェクト遂行の経験を身につけました。',
+        about_p3:'ソフトウェア開発者とビジネスマネージャーの両方の経験を持つ私は、技術要件とビジネス目標の両方を理解し、プロジェクトに独自の視点をもたらします。',
+        game_title:'スネーク & フロッグ', game_sub:'休憩しよう — カエルを食べ、炎を避け、竜巻を攻略しよう。',
+        exp_title:'職歴',
+        exp1_role:'ジュニアデータベースマネージャー & ITサポート',
+        exp1_desc:'組織のデータベースを管理・最適化し、データの正確性とセキュリティを確保。包括的なITサポートを提供し、ハードウェア/ソフトウェアの問題を解決してダウンタイムを最小化。',
+        exp2_role:'ビジネスマネージャー',
+        exp2_desc:'トラブルシューティング、メンテナンス、更新、レポート生成を含むCRMデータベースを管理。在庫活動を監督し、業務運営を効率化。',
+        exp3_role:'フリーランスウェブ開発者',
+        exp3_desc:'WordPress、HTML/CSS、JavaScriptを使用してレスポンシブウェブサイトを設計・展開。UXの改善を実施し、重要なバグを修正してサイトのパフォーマンスを向上。',
+        proj_title:'私のプロジェクト',
+        proj1_title:'自然言語処理ツール',
+        proj1_desc:'NLPライブラリを使用したPythonベースのテキスト分析アプリケーションを開発。感情分析と文脈理解のための機械学習アルゴリズムを実装。',
+        proj2_title:'在庫管理データベース',
+        proj2_desc:'効率的なデータクエリとレポートのためのSQLリレーショナルデータベースシステムを設計。Pythonでユーザーフレンドリーなフロントエンドを作成。',
+        proj3_title:'RNN翻訳システム',
+        proj3_desc:'再帰型ニューラルネットワークが翻訳精度を向上させ、文脈のニュアンスを保持する可能性を探った学部の最終プロジェクト。',
+        edu_title:'学歴', edu1_degree:'MSc ソフトウェアエンジニアリング',
+        edu1_desc:'関連科目：ソフトウェアライフサイクル管理、システムセキュリティ、高度なデータベース、新興技術。',
+        edu2_degree:'BSc（優等）コンピュータサイエンス & ソフトウェアエンジニアリング',
+        edu2_desc:'2:1の成績で卒業。主要科目：データ構造、アルゴリズム、コンピュータネットワーク、Pythonプログラミング、ソフトウェアエンジニアリングの原則。',
+        contact_title:'お問い合わせ', contact_email:'メール', contact_location:'所在地', contact_phone:'電話',
+        form_name:'名前', form_email:'メールアドレス', form_message:'メッセージ', form_send:'メッセージを送る',
+        form_ph_name:'お名前', form_ph_email:'メールアドレス', form_ph_msg:'どのようにお手伝いできますか？',
+        footer_copy:'© 2025 Prajwal Poudel. 全著作権所有。'
+      },
+
+      ne: {
+        nav_home:'गृहपृष्ठ', nav_about:'मेरो बारेमा', nav_experience:'अनुभव',
+        nav_projects:'परियोजनाहरू', nav_education:'शिक्षा', nav_contact:'सम्पर्क',
+        hero_title:'सफ्टवेयर इन्जिनियर र व्यापार प्रबन्धक',
+        hero_sub1:'Python, SQL र full-stack विकासमा विशेषज्ञता भएका MSc सफ्टवेयर इन्जिनियरिङ स्नातक।',
+        hero_sub2:'प्रयोगकर्ता-केन्द्रित अनुप्रयोगहरू निर्माण गर्न र वास्तविक समस्याहरू समाधान गर्न NLP/ML जस्ता उभरिँदो प्रविधिहरू प्रयोग गर्न उत्साहित।',
+        hero_btn:'मेरो काम हेर्नुहोस्',
+        about_title:'मेरो बारेमा',
+        about_p1:'म Prajwal Poudel हुँ, Python, SQL र full-stack विकासमा विशेषज्ञता भएका सफ्टवेयर इन्जिनियरिङ स्नातक (MSc), डाटाबेस व्यवस्थापन, IT सहयोग र वेब/एप विकासमा व्यावहारिक अनुभव सहित।',
+        about_p2:'मेरो व्यावसायिक यात्राले मलाई बलियो समस्या-समाधान क्षमताहरू, प्रक्रिया अनुकूलन सीपहरू र सहयोगी परियोजना डेलिभरीमा अनुभव प्रदान गरेको छ।',
+        about_p3:'सफ्टवेयर विकासकर्ता र व्यापार प्रबन्धक दुवैको रूपमा अनुभव भएकाले, म परियोजनाहरूमा एक अद्वितीय दृष्टिकोण ल्याउँछु।',
+        game_title:'साँप र भ्यागुतो', game_sub:'ब्रेक लिनुहोस् — भ्यागुता खानुहोस्, आगोबाट बच्नुहोस्, tornado लाई जित्नुहोस्।',
+        exp_title:'व्यावसायिक अनुभव',
+        exp1_role:'जुनियर डाटाबेस प्रबन्धक र IT सहयोग',
+        exp1_desc:'संगठनात्मक डाटाबेसहरू व्यवस्थापन र अनुकूलन गरेर डाटा सटीकता र सुरक्षा सुनिश्चित गरें। हार्डवेयर/सफ्टवेयर समस्याहरू समाधान गरेर व्यापक IT सहयोग प्रदान गरें।',
+        exp2_role:'व्यापार प्रबन्धक',
+        exp2_desc:'समस्या निवारण, मर्मत, अपडेट र रिपोर्ट उत्पादन सहित CRM डाटाबेस व्यवस्थापन गरें। इन्भेन्टरी गतिविधिहरूको निगरानी गरें र व्यापार सञ्चालन अनुकूलन गरें।',
+        exp3_role:'फ्रिल्यान्स वेब विकासकर्ता',
+        exp3_desc:'WordPress, HTML/CSS र JavaScript प्रयोग गरेर responsive वेबसाइटहरू डिजाइन र deploy गरें। UX सुधारहरू लागू गरें र महत्वपूर्ण bugs ठीक गरें।',
+        proj_title:'मेरा परियोजनाहरू',
+        proj1_title:'प्राकृतिक भाषा प्रशोधन उपकरण',
+        proj1_desc:'NLP पुस्तकालयहरू प्रयोग गरेर Python-आधारित पाठ विश्लेषण अनुप्रयोग विकास गरें। भावना विश्लेषणको लागि machine learning एल्गोरिदमहरू लागू गरें।',
+        proj2_title:'इन्भेन्टरी व्यवस्थापन डाटाबेस',
+        proj2_desc:'कुशल डाटा क्वेरी र रिपोर्टिङको लागि SQL सहित relational database system डिजाइन गरें। Python मा user-friendly front-end interface बनाएँ।',
+        proj3_title:'RNN अनुवाद प्रणाली',
+        proj3_desc:'Recurrent Neural Networks को अनुवाद सटीकता सुधार गर्ने र सन्दर्भ सूक्ष्मताहरू संरक्षण गर्ने सम्भावना अन्वेषण गर्ने स्नातक अन्तिम परियोजना।',
+        edu_title:'शिक्षा', edu1_degree:'MSc सफ्टवेयर इन्जिनियरिङ',
+        edu1_desc:'सम्बन्धित पाठ्यक्रमहरू: सफ्टवेयर जीवनचक्र व्यवस्थापन, प्रणाली सुरक्षा, उन्नत डाटाबेसहरू र उभरिँदो प्रविधिहरू।',
+        edu2_degree:'BSc (Hons) कम्प्युटिङ साइन्स र सफ्टवेयर इन्जिनियरिङ',
+        edu2_desc:'2:1 वर्गीकरणका साथ स्नातक। मुख्य विषयहरू: डाटा संरचनाहरू, एल्गोरिदमहरू, कम्प्युटर नेटवर्कहरू, Python प्रोग्रामिङ र सफ्टवेयर इन्जिनियरिङ सिद्धान्तहरू।',
+        contact_title:'सम्पर्क गर्नुहोस्', contact_email:'इमेल', contact_location:'ठेगाना', contact_phone:'फोन',
+        form_name:'नाम', form_email:'इमेल', form_message:'सन्देश', form_send:'सन्देश पठाउनुहोस्',
+        form_ph_name:'तपाईंको नाम', form_ph_email:'तपाईंको इमेल', form_ph_msg:'म कसरी मद्दत गर्न सक्छु?',
+        footer_copy:'© 2025 Prajwal Poudel. सर्वाधिकार सुरक्षित।'
+      }
+    };
+
+    var LANG_LABELS = { en:'EN', es:'ES', fr:'FR', de:'DE', nl:'NL', zh:'中文', ja:'日本語', ne:'नेपाली' };
+    var currentLang = localStorage.getItem('siteLang') || 'en';
+
+    function applyLang(lang) {
+      if (!TRANSLATIONS[lang]) return;
+      currentLang = lang;
+      localStorage.setItem('siteLang', lang);
+
+      var t = TRANSLATIONS[lang];
+
+      // translate text content
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.textContent = t[key];
+      });
+
+      // translate placeholders
+      document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n-ph');
+        if (t[key] !== undefined) el.placeholder = t[key];
+      });
+
+      // update label
+      var lbl = document.getElementById('langCurrentLabel');
+      if (lbl) lbl.textContent = LANG_LABELS[lang] || lang.toUpperCase();
+
+      // update active state
+      document.querySelectorAll('.lang-option').forEach(function(btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+
+      // set html lang attribute
+      document.documentElement.lang = lang;
+    }
+
+    // Wire up dropdown
+    document.querySelectorAll('.lang-option').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        applyLang(btn.getAttribute('data-lang'));
+        document.getElementById('langDropdown').classList.remove('open');
+      });
+    });
+
+    // Toggle on mobile tap
+    var langBtn = document.getElementById('langBtn');
+    if (langBtn) {
+      langBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('langDropdown').classList.toggle('open');
+      });
+    }
+    document.addEventListener('click', function() {
+      var dd = document.getElementById('langDropdown');
+      if (dd) dd.classList.remove('open');
+    });
+
+    // Apply on load
+    applyLang(currentLang);
+
+    })();
+    </script>
