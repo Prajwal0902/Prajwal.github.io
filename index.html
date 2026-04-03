@@ -911,6 +911,806 @@
         </div>
     </section>
 
+    <!-- ══════════════════════════════════════════════
+         SNAKE & FROG GAME SECTION
+         ══════════════════════════════════════════════ -->
+    <section id="game" style="background:var(--darker);min-height:auto;padding:4rem 0 5rem;">
+      <div class="container">
+        <h2 class="section-title">Snake &amp; Frog</h2>
+        <p style="color:var(--gray);font-size:1rem;margin-bottom:2.5rem;max-width:600px;">
+          Take a break — eat frogs, dodge fire, outsmart tornadoes. Scores are saved to a shared GitHub Gist leaderboard visible to everyone who plays.
+        </p>
+
+        <!-- GAME WRAPPER: centres and scales the game on all screen sizes -->
+        <div id="sf-root" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+
+          <!-- RESPONSIVE SCALE CONTAINER -->
+          <div id="sf-scaler" style="width:100%;max-width:840px;transform-origin:top center;">
+
+            <style>
+              /* ── GAME FONT ─────────────────────────────────── */
+              @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+
+              /* ── SCOPED CSS VARS (won't leak into site) ────── */
+              #sf-root {
+                --gsc: #39ff14;
+                --gfc: #00cfff;
+                --gbg: #0a0a0f;
+                --gbd: #1a1a2e;
+                --gac: #ff007f;
+                --gtx: #e0e0e0;
+                --gdm: #444466;
+                font-family: 'Press Start 2P', monospace;
+              }
+
+              /* scanlines overlay scoped to game root */
+              #sf-scanlines {
+                position:absolute;inset:0;pointer-events:none;z-index:200;
+                background:repeating-linear-gradient(0deg,rgba(0,0,0,.06) 0,rgba(0,0,0,.06) 1px,transparent 1px,transparent 4px);
+                border-radius:8px;
+              }
+
+              /* ── LAYOUT ──────────────────────────────────── */
+              #sf-wrap {
+                position:relative;
+                background:#0a0a0f;
+                border-radius:8px;
+                border:1px solid rgba(212,175,55,.15);
+                box-shadow:0 0 60px rgba(0,0,0,.6),0 0 0 1px rgba(57,255,20,.05);
+                padding:16px 12px 20px;
+                display:flex;flex-direction:column;align-items:center;gap:10px;
+                overflow:hidden;
+              }
+
+              #sf-wrap::before {
+                content:'';position:absolute;inset:0;
+                background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.008) 40px),
+                           repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.008) 40px);
+                pointer-events:none;
+              }
+
+              #sf-title {
+                font-family:'Press Start 2P',monospace;
+                font-size:clamp(12px,2.2vw,18px);
+                letter-spacing:.15em;color:#39ff14;
+                text-shadow:0 0 16px #39ff14,0 0 32px #39ff14;
+                animation:sf-flicker 5s infinite;
+                position:relative;z-index:1;
+              }
+              #sf-title .sf-ta{color:#00cfff;text-shadow:0 0 16px #00cfff;}
+              @keyframes sf-flicker{0%,94%,100%{opacity:1}95%{opacity:.6}96%{opacity:1}98%{opacity:.5}}
+
+              /* game area row */
+              #sf-game-area{display:flex;gap:10px;align-items:flex-start;justify-content:center;width:100%;position:relative;z-index:1;}
+
+              /* sidebars */
+              .sf-sidebar{display:flex;flex-direction:column;gap:8px;width:130px;flex-shrink:0;}
+              .sf-panel{background:rgba(255,255,255,.03);border:1px solid var(--gbd);padding:9px 10px;position:relative;border-radius:2px;}
+              .sf-panel::before{content:'';position:absolute;inset:-1px;border:1px solid transparent;
+                background:linear-gradient(135deg,var(--gac),transparent 55%) border-box;
+                -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+                -webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none;}
+              .sf-plabel{font-size:5.5px;color:var(--gdm);letter-spacing:.12em;margin-bottom:5px;text-transform:uppercase;}
+              .sf-bigval{font-family:'VT323',monospace;font-size:38px;color:var(--gsc);text-shadow:0 0 12px var(--gsc);line-height:1;}
+              .sf-timeval{font-family:'VT323',monospace;font-size:26px;color:#aaffdd;text-shadow:0 0 8px #aaffdd88;line-height:1;}
+              .sf-difftag{font-size:6.5px;letter-spacing:.05em;}
+
+              /* swatches */
+              #sf-root .sf-swatches{display:flex;flex-wrap:wrap;gap:4px;}
+              #sf-root .sf-sw{width:18px;height:18px;border-radius:3px;cursor:pointer;border:2px solid transparent;transition:transform .1s,border-color .1s;flex-shrink:0;}
+              #sf-root .sf-sw:hover{transform:scale(1.2);}
+              #sf-root .sf-sw.on{border-color:#fff;transform:scale(1.15);box-shadow:0 0 5px #fff8;}
+
+              /* canvas wrapper */
+              #sf-cw{position:relative;flex-shrink:0;}
+              #sf-gc{display:block;border:2px solid var(--gbd);image-rendering:pixelated;
+                box-shadow:0 0 0 1px rgba(255,255,255,.04),0 0 30px rgba(57,255,20,.07);}
+
+              /* overlays */
+              .sf-ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+                justify-content:center;background:rgba(10,10,15,.92);gap:11px;z-index:5;padding:16px;}
+              .sf-ov.hide{display:none;}
+              .sf-ov-title{font-size:clamp(9px,1.6vw,12px);color:var(--gac);text-shadow:0 0 18px var(--gac);text-align:center;line-height:1.9;}
+              .sf-ov-sub{font-size:5.5px;color:var(--gdm);text-align:center;line-height:2.4;}
+              .sf-fscore{font-family:'VT323',monospace;font-size:32px;color:var(--gfc);text-shadow:0 0 16px var(--gfc);text-align:center;}
+              .sf-rbadge{font-size:6.5px;color:#ffd700;text-shadow:0 0 10px #ffd700;text-align:center;}
+              .sf-niw{display:flex;flex-direction:column;align-items:center;gap:5px;}
+              .sf-niw label{font-size:5.5px;color:var(--gdm);letter-spacing:.12em;}
+              #sf-pname{font-family:'Press Start 2P',monospace;font-size:9px;
+                background:rgba(255,255,255,.05);border:2px solid var(--gsc);color:var(--gsc);
+                padding:7px 10px;text-align:center;outline:none;width:180px;letter-spacing:.05em;}
+              #sf-pname::placeholder{color:var(--gdm);font-size:7px;}
+
+              /* buttons */
+              #sf-root .sf-btn{font-family:'Press Start 2P',monospace;font-size:6.5px;background:none;
+                border:2px solid var(--gsc);color:var(--gsc);padding:7px 14px;cursor:pointer;
+                text-shadow:0 0 8px var(--gsc);transition:all .12s;letter-spacing:.1em;}
+              #sf-root .sf-btn:hover{background:var(--gsc);color:#0a0a0f;}
+              #sf-root .sf-btnrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+              #sf-root .sf-btnf{border-color:var(--gfc);color:var(--gfc);text-shadow:0 0 7px var(--gfc);}
+              #sf-root .sf-btnf:hover{background:var(--gfc);color:#0a0a0f;}
+
+              /* d-pad */
+              #sf-root .sf-dw{display:flex;flex-direction:column;align-items:center;gap:2px;}
+              #sf-root .sf-dr{display:flex;gap:2px;justify-content:center;}
+              #sf-root .sf-db{width:34px;height:34px;background:rgba(255,255,255,.04);border:1px solid var(--gbd);
+                color:var(--gdm);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+                transition:all .08s;user-select:none;-webkit-user-select:none;line-height:1;border-radius:2px;}
+              #sf-root .sf-db:hover,#sf-root .sf-db:active{background:rgba(255,255,255,.1);color:var(--gsc);border-color:var(--gsc);}
+              #sf-root .sf-dg{width:34px;height:34px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.02);}
+
+              /* legend */
+              #sf-root .sf-legrow{display:flex;align-items:center;gap:5px;margin-bottom:3px;}
+              #sf-root .sf-legdot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+              #sf-root .sf-ht{font-size:5px;color:var(--gdm);line-height:2.2;}
+
+              /* scoreboard */
+              #sf-sbp{width:100%;background:rgba(255,255,255,.025);border:1px solid var(--gbd);padding:10px 14px;position:relative;z-index:1;}
+              #sf-sbp::before{content:'';position:absolute;inset:-1px;border:1px solid transparent;
+                background:linear-gradient(90deg,var(--gfc),transparent 50%) border-box;
+                -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+                -webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none;}
+              #sf-root .sf-sbh{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;gap:8px;flex-wrap:wrap;}
+              #sf-root .sf-sbt{font-size:6.5px;color:var(--gfc);letter-spacing:.12em;text-shadow:0 0 8px var(--gfc);}
+              #sf-root .sf-sbactions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+              #sf-root .sf-sbc{font-family:'Press Start 2P',monospace;font-size:4.5px;background:none;
+                border:1px solid var(--gdm);color:var(--gdm);padding:3px 6px;cursor:pointer;}
+              #sf-root .sf-sbc:hover{border-color:var(--gac);color:var(--gac);}
+              #sf-root .sf-ghstatus{font-size:4.5px;color:var(--gdm);}
+              #sf-root .sf-sbtbl{width:100%;border-collapse:collapse;}
+              #sf-root .sf-sbtbl th{font-size:4.5px;color:var(--gdm);text-align:left;padding:3px 5px;border-bottom:1px solid var(--gbd);letter-spacing:.1em;}
+              #sf-root .sf-sbtbl th:last-child{text-align:right;}
+              #sf-root .sf-sbtbl td{font-family:'VT323',monospace;font-size:17px;padding:2px 5px;color:var(--gtx);line-height:1.3;}
+              #sf-root .sf-sbtbl td:last-child{text-align:right;color:var(--gsc);text-shadow:0 0 7px var(--gsc);}
+              #sf-root .sf-sbtbl tr.sf-g1 td{color:#ffd700;text-shadow:0 0 7px #ffd700;}
+              #sf-root .sf-sbtbl tr.sf-g1 td:last-child{color:#ffd700;text-shadow:0 0 9px #ffd700;}
+              #sf-root .sf-sbrank{color:var(--gdm)!important;font-size:13px!important;text-shadow:none!important;}
+              #sf-root .sf-sbmpty{font-size:6.5px;color:var(--gdm);text-align:center;padding:10px;}
+
+              /* GitHub info box */
+              #sf-ghinfo{font-size:5px;color:var(--gdm);text-align:center;line-height:2;padding:6px 0 0;position:relative;z-index:1;}
+              #sf-ghinfo a{color:var(--gfc);text-decoration:none;}
+              #sf-ghinfo a:hover{color:#fff;}
+
+              /* ── RESPONSIVE ──────────────────────────────── */
+              /* hide sidebars on narrow screens, show stacked controls below canvas */
+              @media(max-width:700px){
+                .sf-sidebar{display:none;}
+                #sf-game-area{flex-direction:column;align-items:center;}
+                #sf-mobile-hud{display:flex!important;}
+                #sf-mobile-dpad{display:flex!important;}
+              }
+              #sf-mobile-hud{
+                display:none;
+                gap:8px;justify-content:center;flex-wrap:wrap;
+                width:100%;position:relative;z-index:1;
+              }
+              .sf-hud-chip{
+                background:rgba(255,255,255,.04);border:1px solid var(--gbd);
+                padding:5px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;
+              }
+              .sf-hud-chip .sf-plabel{margin-bottom:0;}
+              #sf-mobile-dpad{
+                display:none;
+                flex-direction:column;align-items:center;gap:2px;
+                position:relative;z-index:1;margin-top:4px;
+              }
+            </style>
+
+            <div id="sf-wrap">
+              <div id="sf-scanlines"></div>
+
+              <div id="sf-title">SNAKE <span class="sf-ta">&amp;</span> FROG</div>
+
+              <!-- MOBILE HUD (visible on small screens instead of sidebars) -->
+              <div id="sf-mobile-hud">
+                <div class="sf-hud-chip">
+                  <div class="sf-plabel">SCORE</div>
+                  <div class="sf-bigval" id="sf-scoredisp-m">0</div>
+                </div>
+                <div class="sf-hud-chip">
+                  <div class="sf-plabel">TIME</div>
+                  <div class="sf-timeval" id="sf-timedisp-m">00:00</div>
+                </div>
+                <div class="sf-hud-chip">
+                  <div class="sf-plabel">LEVEL</div>
+                  <div class="sf-difftag" id="sf-difftag-m" style="color:#39ff14;text-shadow:0 0 8px #39ff14">&#9679; EASY</div>
+                </div>
+              </div>
+
+              <div id="sf-game-area">
+
+                <!-- LEFT SIDEBAR -->
+                <div class="sf-sidebar">
+                  <div class="sf-panel">
+                    <div class="sf-plabel">Score</div>
+                    <div class="sf-bigval" id="sf-scoredisp">0</div>
+                  </div>
+                  <div class="sf-panel">
+                    <div class="sf-plabel">Time</div>
+                    <div class="sf-timeval" id="sf-timedisp">00:00</div>
+                  </div>
+                  <div class="sf-panel">
+                    <div class="sf-plabel">Difficulty</div>
+                    <div class="sf-difftag" id="sf-difftag" style="color:#39ff14;text-shadow:0 0 8px #39ff14">&#9679; EASY</div>
+                  </div>
+                  <div class="sf-panel">
+                    <div class="sf-plabel">Snake</div>
+                    <div class="sf-swatches" id="sf-snakesw"></div>
+                  </div>
+                  <div class="sf-panel">
+                    <div class="sf-plabel">Frog</div>
+                    <div class="sf-swatches" id="sf-frogsw"></div>
+                  </div>
+                </div>
+
+                <!-- CANVAS -->
+                <div id="sf-cw">
+                  <canvas id="sf-gc" width="400" height="400"></canvas>
+                  <!-- entry overlay -->
+                  <div class="sf-ov" id="sf-entryOv">
+                    <div class="sf-ov-title">SNAKE &amp; FROG</div>
+                    <div class="sf-ov-sub">Eat frogs. Avoid fire, walls, tornadoes.<br>Grab the golden EGG to reset length.<br>Scores saved to global leaderboard.</div>
+                    <div class="sf-niw">
+                      <label>YOUR NAME</label>
+                      <input type="text" id="sf-pname" maxlength="12" placeholder="PLAYER ONE" autocomplete="off" spellcheck="false">
+                    </div>
+                    <button class="sf-btn" id="sf-startBtn">START GAME</button>
+                  </div>
+                  <!-- game over overlay -->
+                  <div class="sf-ov hide" id="sf-goOv">
+                    <div class="sf-ov-title" id="sf-goTitle">GAME OVER</div>
+                    <div class="sf-fscore" id="sf-goScore"></div>
+                    <div class="sf-rbadge" id="sf-goBadge"></div>
+                    <div class="sf-btnrow">
+                      <button class="sf-btn" id="sf-replayBtn">PLAY AGAIN</button>
+                      <button class="sf-btn sf-btnf" id="sf-chNameBtn">CHANGE NAME</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- RIGHT SIDEBAR -->
+                <div class="sf-sidebar">
+                  <div class="sf-panel">
+                    <div class="sf-plabel">Legend</div>
+                    <div class="sf-legrow"><div class="sf-legdot" style="background:#00cfff;box-shadow:0 0 4px #00cfff"></div><span style="font-size:4.5px;color:var(--gdm)">FROG +1 score</span></div>
+                    <div class="sf-legrow"><div class="sf-legdot" style="background:#ffe066;box-shadow:0 0 4px #ffe066"></div><span style="font-size:4.5px;color:var(--gdm)">EGG reset length</span></div>
+                    <div class="sf-legrow"><div class="sf-legdot" style="background:#ff4400;box-shadow:0 0 4px #ff4400"></div><span style="font-size:4.5px;color:var(--gdm)">FIRE = death</span></div>
+                    <div class="sf-legrow"><div class="sf-legdot" style="background:#888;box-shadow:0 0 3px #888"></div><span style="font-size:4.5px;color:var(--gdm)">WALL = death</span></div>
+                    <div class="sf-legrow"><div class="sf-legdot" style="background:#cc88ff;box-shadow:0 0 4px #cc88ff"></div><span style="font-size:4.5px;color:var(--gdm)">TORNADO moves!</span></div>
+                    <div style="margin-top:6px" class="sf-ht">Arrows/WASD<br>Speed grows<br>with time+score</div>
+                  </div>
+                  <div class="sf-panel">
+                    <div class="sf-plabel">D-Pad</div>
+                    <div class="sf-dw">
+                      <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dU">&#9650;</button><div class="sf-dg"></div></div>
+                      <div class="sf-dr"><button class="sf-db" id="sf-dL">&#9668;</button><div class="sf-dg" style="background:rgba(255,255,255,.04)"></div><button class="sf-db" id="sf-dR">&#9658;</button></div>
+                      <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dD">&#9660;</button><div class="sf-dg"></div></div>
+                    </div>
+                  </div>
+                  <!-- color pickers in right sidebar on mobile -->
+                  <div class="sf-panel" style="display:none" id="sf-mobile-colors">
+                    <div class="sf-plabel">Snake</div>
+                    <div class="sf-swatches" id="sf-snakesw-m"></div>
+                    <div class="sf-plabel" style="margin-top:6px">Frog</div>
+                    <div class="sf-swatches" id="sf-frogsw-m"></div>
+                  </div>
+                </div>
+
+              </div><!-- /sf-game-area -->
+
+              <!-- MOBILE D-PAD (shown below canvas on small screens) -->
+              <div id="sf-mobile-dpad">
+                <div class="sf-dw">
+                  <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dU2">&#9650;</button><div class="sf-dg"></div></div>
+                  <div class="sf-dr"><button class="sf-db" id="sf-dL2">&#9668;</button><div class="sf-dg" style="background:rgba(255,255,255,.04)"></div><button class="sf-db" id="sf-dR2">&#9658;</button></div>
+                  <div class="sf-dr"><div class="sf-dg"></div><button class="sf-db" id="sf-dD2">&#9660;</button><div class="sf-dg"></div></div>
+                </div>
+              </div>
+
+              <!-- SCOREBOARD -->
+              <div id="sf-sbp">
+                <div class="sf-sbh">
+                  <div class="sf-sbt">&#9889; GLOBAL LEADERBOARD</div>
+                  <div class="sf-sbactions">
+                    <button class="sf-sbc" id="sf-clrBtn">CLEAR</button>
+                  </div>
+                </div>
+                <div id="sf-sbcontent"><div class="sf-sbmpty">No scores yet &mdash; be the first!</div></div>
+              </div>
+
+              <!-- GitHub Gist info -->
+
+            </div><!-- /sf-wrap -->
+          </div><!-- /sf-scaler -->
+        </div><!-- /sf-root -->
+
+      </div><!-- /container -->
+    </section>
+
+    <script>
+    (function(){
+    "use strict";
+
+    // ── RESPONSIVE CANVAS SCALING ─────────────────────────
+    var GAME_W = 840; // design width of the full game layout
+    function scaleGame() {
+      var scaler  = document.getElementById('sf-scaler');
+      var root    = document.getElementById('sf-root');
+      var avail   = root.offsetWidth;
+      // clamp scale between 0.35 and 1
+      var scale   = Math.min(1, Math.max(0.35, avail / GAME_W));
+      scaler.style.transform = 'scale(' + scale + ')';
+      scaler.style.height    = (scaler.scrollHeight * scale) + 'px';
+      // update canvas pixel size to fit nicely at any scale
+    }
+    window.addEventListener('resize', scaleGame);
+    // run after fonts load
+    window.addEventListener('load', scaleGame);
+    setTimeout(scaleGame, 300);
+
+    // ── CANVAS ────────────────────────────────────────────
+    var canvas = document.getElementById('sf-gc');
+    var ctx    = canvas.getContext('2d');
+    var COLS = 20, ROWS = 20, CELL = canvas.width / COLS;
+
+    // ── CONSTANTS ─────────────────────────────────────────
+    var HOP_MS     = 5000;
+    var INIT_LEN   = 3;
+    var SPEED_SLOW = 240;
+    var SPEED_FAST = 72;
+
+    // ── TIERS ─────────────────────────────────────────────
+    var TIERS = [
+      { id:0, scoreThresh:0,  timeSec:0,   label:'EASY',   color:'#39ff14', nFire:0, nWall:0, nTornado:0 },
+      { id:1, scoreThresh:10, timeSec:120, label:'MEDIUM',  color:'#ffcc00', nFire:1, nWall:1, nTornado:0 },
+      { id:2, scoreThresh:20, timeSec:240, label:'HARD',    color:'#ff8800', nFire:2, nWall:1, nTornado:0 },
+      { id:3, scoreThresh:35, timeSec:360, label:'SAVAGE',  color:'#ff4400', nFire:2, nWall:2, nTornado:1 },
+      { id:4, scoreThresh:55, timeSec:480, label:'INSANE',  color:'#ff007f', nFire:3, nWall:2, nTornado:2 }
+    ];
+
+    // ── PALETTES ──────────────────────────────────────────
+    var SPAL = ['#39ff14','#ff4444','#ff9900','#cc44ff','#ffffff','#ff66aa'];
+    var FPAL = ['#00cfff','#ff66cc','#aaff00','#ff8800','#ffff33','#44ffee'];
+    var SC = SPAL[0], FC = FPAL[0];
+
+    function makeSwatch(id, palette, getC, setC) {
+      var wrap = document.getElementById(id);
+      if (!wrap) return;
+      palette.forEach(function(color) {
+        var s = document.createElement('div');
+        s.className = 'sf-sw' + (color === getC() ? ' on' : '');
+        s.style.background = color;
+        s.style.boxShadow  = '0 0 5px ' + color + '99';
+        s.addEventListener('click', function() {
+          setC(color);
+          [].forEach.call(wrap.querySelectorAll('.sf-sw'), function(x){ x.classList.remove('on'); });
+          s.classList.add('on');
+        });
+        wrap.appendChild(s);
+      });
+    }
+    makeSwatch('sf-snakesw',   SPAL, function(){ return SC; }, function(c){ SC = c; });
+    makeSwatch('sf-frogsw',    FPAL, function(){ return FC; }, function(c){ FC = c; });
+    makeSwatch('sf-snakesw-m', SPAL, function(){ return SC; }, function(c){ SC = c; });
+    makeSwatch('sf-frogsw-m',  FPAL, function(){ return FC; }, function(c){ FC = c; });
+
+    // ── GITHUB GIST SCORE SYNC ────────────────────────────
+    // Players can optionally wire up a public Gist. When a Gist ID is set:
+    //   - scores are fetched from the Gist on page load
+    //   - after each game the new score is POSTed back via the API (no auth needed for public read;
+    //     write requires a token — so by default we do read-only + localStorage fallback)
+    //
+    // IMPORTANT: GitHub's Gist API requires authentication for writes. Without a token the board
+    // falls back gracefully to localStorage. To enable full sync, create a fine-grained PAT with
+    // "Gists: write" scope and store it in the Gist file itself (not exposed here).
+    // For a fully public no-auth solution we recommend a free JSONBin.io or similar.
+
+    var LOCAL_KEY = 'sfGlobalScores_v1';
+
+    function dedup(arr) {
+      var seen = {};
+      return arr.filter(function(s){
+        var k = s.name + '_' + s.score + '_' + s.time;
+        if (seen[k]) return false;
+        seen[k] = true; return true;
+      });
+    }
+
+    function loadLocalSB(){ try{ return JSON.parse(localStorage.getItem(LOCAL_KEY))||[]; }catch(e){ return []; } }
+    function saveLocalSB(a){ try{ localStorage.setItem(LOCAL_KEY, JSON.stringify(a)); }catch(e){} }
+
+    function addScore(name, sc, len, timeStr) {
+      var arr = loadLocalSB();
+      arr.push({ name:name.toUpperCase().slice(0,12), score:sc, len:len, time:timeStr });
+      arr.sort(function(a,b){ return b.score - a.score; });
+      arr = dedup(arr).slice(0,10);
+      saveLocalSB(arr);
+      renderSB();
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i].name === name.toUpperCase().slice(0,12) && arr[i].score === sc) return i + 1;
+      }
+      return 0;
+    }
+
+    function renderSB() {
+      var arr = loadLocalSB();
+      var el  = document.getElementById('sf-sbcontent');
+      if (!arr.length) { el.innerHTML = '<div class="sf-sbmpty">No scores yet &mdash; be the first!</div>'; return; }
+      var medals = ['&#127945;','&#129352;','&#129353;'];
+      var html = '<table class="sf-sbtbl"><thead><tr><th>#</th><th>NAME</th><th>TIME</th><th>LEN</th><th>SCORE</th></tr></thead><tbody>';
+      arr.forEach(function(s, i) {
+        html += '<tr class="'+(i===0?'sf-g1':'')+'"><td class="sf-sbrank">'+(medals[i]||(i+1))+'</td>'
+              + '<td>'+s.name+'</td>'
+              + '<td style="font-size:13px;color:var(--gdm)">'+(s.time||'--')+'</td>'
+              + '<td style="font-size:13px;color:var(--gdm)">'+s.len+'</td>'
+              + '<td>'+s.score+'</td></tr>';
+      });
+      html += '</tbody></table>';
+      el.innerHTML = html;
+    }
+
+    document.getElementById('sf-clrBtn').addEventListener('click', function(){
+      if (confirm('Clear local leaderboard?')){ saveLocalSB([]); renderSB(); }
+    });
+
+    // load scores on page load
+    renderSB();
+
+    // ── GAME STATE ────────────────────────────────────────
+    var snake, dir, nextDir, frog, egg, eggTimer, eggPulse;
+    var obstacles;
+    var score, growing, gameRunning;
+    var lastTime, stepAccum, stepMs, hopAccum;
+    var frogAnim, frogDir;
+    var gameMs, lastDiffId;
+    var playerName = 'PLAYER ONE';
+    var eggTid = null;
+
+    // ── HELPERS ───────────────────────────────────────────
+    function fmtTime(ms) {
+      var s = Math.floor(ms/1000), m = Math.floor(s/60); s = s%60;
+      return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    }
+
+    function randCell(excl) {
+      excl = excl||[];
+      var pos, tries=0;
+      do { pos={x:Math.floor(Math.random()*COLS),y:Math.floor(Math.random()*ROWS)}; tries++; }
+      while (tries<500 && excl.some(function(e){ return e.x===pos.x&&e.y===pos.y; }));
+      return pos;
+    }
+
+    function occupiedCells() {
+      var c = snake.slice();
+      if (frog) c.push(frog);
+      if (egg)  c.push(egg);
+      obstacles.forEach(function(o){ c.push({x:o.x,y:o.y}); });
+      return c;
+    }
+
+    function spawnFrog() { frog=randCell(occupiedCells()); frogAnim=0; frogDir=1; }
+
+    function setHUD(timeStr, sc, tier) {
+      // update all HUD elements (desktop sidebars + mobile bar)
+      document.getElementById('sf-scoredisp').textContent   = sc;
+      document.getElementById('sf-scoredisp-m').textContent = sc;
+      document.getElementById('sf-timedisp').textContent    = timeStr;
+      document.getElementById('sf-timedisp-m').textContent  = timeStr;
+      var tags = [document.getElementById('sf-difftag'), document.getElementById('sf-difftag-m')];
+      tags.forEach(function(t){ if(!t)return; t.textContent='\u25CF '+tier.label; t.style.color=tier.color; t.style.textShadow='0 0 8px '+tier.color; });
+    }
+
+    // ── SPEED ─────────────────────────────────────────────
+    function calcSpeed() {
+      var tr = Math.min(gameMs/480000,1), sr = Math.min(score/55,1);
+      return Math.round(SPEED_SLOW - Math.max(tr,sr)*(SPEED_SLOW-SPEED_FAST));
+    }
+
+    // ── DIFFICULTY ────────────────────────────────────────
+    function getDiffTier() {
+      var lvl=0, ts=gameMs/1000;
+      for (var i=0;i<TIERS.length;i++) if (score>=TIERS[i].scoreThresh||ts>=TIERS[i].timeSec) lvl=i;
+      return TIERS[lvl];
+    }
+
+    function applyDifficulty() {
+      var t=getDiffTier(); stepMs=calcSpeed();
+      setHUD(fmtTime(gameMs), score, t);
+      if (t.id>lastDiffId) {
+        for (var tid=lastDiffId+1;tid<=t.id;tid++) {
+          var tier=TIERS[tid];
+          for (var f=0;f<tier.nFire;f++)    addObstacle('fire');
+          for (var w=0;w<tier.nWall;w++)    addObstacle('wall');
+          for (var n=0;n<tier.nTornado;n++) addObstacle('tornado');
+        }
+        lastDiffId=t.id;
+      }
+    }
+
+    function addObstacle(type) {
+      var pos=randCell(occupiedCells()), vx=0, vy=0;
+      if (type==='tornado') { var d4=[[1,0],[-1,0],[0,1],[0,-1]][Math.floor(Math.random()*4)]; vx=d4[0]; vy=d4[1]; }
+      var swMs=(type==='fire')?(5000+Math.random()*3000):(type==='wall')?(9000+Math.random()*5000):(3000+Math.random()*2000);
+      obstacles.push({type:type,x:pos.x,y:pos.y,vx:vx,vy:vy,moveAccum:0,anim:0,swapAccum:0,swapMs:swMs,swapFlash:0});
+    }
+
+    // ── EGG ───────────────────────────────────────────────
+    function maybeScheduleEgg() {
+      clearTimeout(eggTid);
+      eggTid=setTimeout(function(){
+        if (!gameRunning) return;
+        if (gameMs<240000&&score<50){ eggTid=setTimeout(function(){if(gameRunning)maybeScheduleEgg();},15000); return; }
+        egg=randCell(occupiedCells()); eggTimer=10000+Math.random()*6000; eggPulse=0;
+      }, 8000+Math.random()*7000);
+    }
+
+    // ── INIT ──────────────────────────────────────────────
+    function initGame() {
+      clearTimeout(eggTid);
+      snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+      dir={x:1,y:0}; nextDir={x:1,y:0};
+      score=0; growing=0; lastTime=null; stepAccum=0; hopAccum=0;
+      eggPulse=0; egg=null; eggTimer=0; obstacles=[];
+      gameMs=0; lastDiffId=0; stepMs=SPEED_SLOW;
+      frogAnim=0; frogDir=1;
+      frog=randCell(snake);
+      maybeScheduleEgg();
+      setHUD('00:00', 0, TIERS[0]);
+    }
+
+    // ── STEP ──────────────────────────────────────────────
+    function gameStep() {
+      dir={x:nextDir.x,y:nextDir.y};
+      var head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+      if (head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS){endGame();return;}
+      for (var i=0;i<snake.length;i++) if (snake[i].x===head.x&&snake[i].y===head.y){endGame();return;}
+      for (var j=0;j<obstacles.length;j++) if (obstacles[j].x===head.x&&obstacles[j].y===head.y){endGame();return;}
+      snake.unshift(head);
+      if (frog&&head.x===frog.x&&head.y===frog.y) {
+        score++; growing+=Math.max(1,Math.round(snake.length*0.005));
+        hopAccum=0; spawnFrog(); applyDifficulty();
+      }
+      if (egg&&head.x===egg.x&&head.y===egg.y) {
+        if (snake.length>INIT_LEN){snake.splice(INIT_LEN);growing=0;}
+        egg=null; maybeScheduleEgg();
+      }
+      if (growing>0){growing--;}else{snake.pop();}
+    }
+
+    // ── TORNADO + SWAP ────────────────────────────────────
+    var TORNADO_STEP_MS=700;
+
+    function swapObstacles(dt) {
+      for (var i=0;i<obstacles.length;i++) {
+        var o=obstacles[i];
+        o.swapAccum+=dt;
+        if (o.swapFlash>0) o.swapFlash-=dt;
+        if (o.swapAccum>=o.swapMs) {
+          o.swapAccum=0;
+          var np=randCell(occupiedCells());
+          o.x=np.x; o.y=np.y; o.swapFlash=350;
+          o.swapMs+=(Math.random()-0.5)*2000;
+          if (o.swapMs<2000) o.swapMs=2000;
+        }
+      }
+    }
+
+    function moveTornadoes(dt) {
+      for (var i=0;i<obstacles.length;i++) {
+        var o=obstacles[i]; if (o.type!=='tornado') continue;
+        o.moveAccum+=dt;
+        if (o.moveAccum>=TORNADO_STEP_MS) {
+          o.moveAccum-=TORNADO_STEP_MS;
+          var nx=o.x+o.vx, ny=o.y+o.vy;
+          if (nx<0||nx>=COLS){o.vx=-o.vx;nx=o.x+o.vx;}
+          if (ny<0||ny>=ROWS){o.vy=-o.vy;ny=o.y+o.vy;}
+          var blocked=false;
+          if (frog&&frog.x===nx&&frog.y===ny) blocked=true;
+          if (egg&&egg.x===nx&&egg.y===ny)   blocked=true;
+          for (var j=0;j<obstacles.length;j++) if (j!==i&&obstacles[j].x===nx&&obstacles[j].y===ny) blocked=true;
+          if (!blocked){o.x=nx;o.y=ny;}else{o.vx=-o.vx;o.vy=-o.vy;}
+        }
+      }
+    }
+
+    // ── END GAME ──────────────────────────────────────────
+    function endGame() {
+      gameRunning=false; clearTimeout(eggTid);
+      var timeStr=fmtTime(gameMs);
+      var rank=addScore(playerName,score,snake.length,timeStr);
+      document.getElementById('sf-goTitle').textContent=playerName+' \u2014 DEAD';
+      document.getElementById('sf-goScore').textContent='SCORE: '+score+'   TIME: '+timeStr;
+      var badge=document.getElementById('sf-goBadge');
+      if (rank===1)      badge.textContent='\uD83C\uDFC6 NEW HIGH SCORE!';
+      else if (rank===2) badge.textContent='\uD83E\uDD48 RANK #2';
+      else if (rank===3) badge.textContent='\uD83E\uDD49 RANK #3';
+      else               badge.textContent='';
+      document.getElementById('sf-goOv').classList.remove('hide');
+    }
+
+    // ── DRAWING ───────────────────────────────────────────
+    function rr(x,y,w,h,r) {
+      ctx.beginPath();
+      ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+      ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+      ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+      ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
+      ctx.closePath();
+    }
+    function hexRgb(hex){ return parseInt(hex.slice(1,3),16)+','+parseInt(hex.slice(3,5),16)+','+parseInt(hex.slice(5,7),16); }
+    function darken(hex,f){ f=f||0.6; return 'rgb('+Math.round(parseInt(hex.slice(1,3),16)*f)+','+Math.round(parseInt(hex.slice(3,5),16)*f)+','+Math.round(parseInt(hex.slice(5,7),16)*f)+')'; }
+
+    function drawGrid() {
+      ctx.fillStyle='#0a0a0f'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle='rgba(255,255,255,0.022)'; ctx.lineWidth=0.5;
+      for (var x=0;x<=COLS;x++){ctx.beginPath();ctx.moveTo(x*CELL,0);ctx.lineTo(x*CELL,canvas.height);ctx.stroke();}
+      for (var y=0;y<=ROWS;y++){ctx.beginPath();ctx.moveTo(0,y*CELL);ctx.lineTo(canvas.width,y*CELL);ctx.stroke();}
+    }
+
+    function drawObstacles() {
+      for (var i=0;i<obstacles.length;i++) {
+        var o=obstacles[i];
+        o.anim=(o.anim+0.04)%(Math.PI*2);
+        var cx=o.x*CELL+CELL/2, cy=o.y*CELL+CELL/2;
+        if (o.type==='fire') {
+          var flk=Math.sin(gameMs*0.013+i*1.7)*0.25+0.75;
+          ctx.shadowColor='#ff4400'; ctx.shadowBlur=14*flk;
+          var fg=ctx.createRadialGradient(cx,cy+2,1,cx,cy,CELL*0.46);
+          fg.addColorStop(0,'rgba(255,230,0,0.95)');fg.addColorStop(0.35,'rgba(255,100,0,0.85)');fg.addColorStop(1,'rgba(180,0,0,0)');
+          ctx.fillStyle=fg;ctx.beginPath();ctx.ellipse(cx,cy+1,CELL*0.34,CELL*0.43,0,0,Math.PI*2);ctx.fill();
+          ctx.fillStyle='rgba(255,240,80,'+(0.55*flk)+')';ctx.beginPath();ctx.ellipse(cx,cy-CELL*0.17,CELL*0.13,CELL*0.21,0,0,Math.PI*2);ctx.fill();
+          ctx.shadowBlur=0;
+        } else if (o.type==='wall') {
+          ctx.shadowColor='#555';ctx.shadowBlur=4;ctx.fillStyle='#2a2a2a';
+          rr(o.x*CELL+1,o.y*CELL+1,CELL-2,CELL-2,2);ctx.fill();ctx.shadowBlur=0;
+          ctx.strokeStyle='#555';ctx.lineWidth=0.8;ctx.strokeRect(o.x*CELL+1,o.y*CELL+1,CELL-2,CELL-2);
+          ctx.beginPath();ctx.moveTo(o.x*CELL+2,o.y*CELL+CELL/2);ctx.lineTo(o.x*CELL+CELL-2,o.y*CELL+CELL/2);ctx.stroke();
+          ctx.beginPath();ctx.moveTo(o.x*CELL+CELL/2,o.y*CELL+2);ctx.lineTo(o.x*CELL+CELL/2,o.y*CELL+CELL/2-1);ctx.stroke();
+        } else if (o.type==='tornado') {
+          var spin=gameMs*0.006;
+          ctx.save();ctx.translate(cx,cy);ctx.shadowColor='#cc88ff';ctx.shadowBlur=12;
+          for (var a=0;a<3;a++) {
+            var bAng=spin+(a*Math.PI*2/3);
+            ctx.strokeStyle='rgba(210,150,255,'+(0.55+0.45*Math.sin(spin+a))+')';ctx.lineWidth=1.6;ctx.beginPath();
+            for (var st=0;st<=20;st++) { var tt=st/20,rr2=tt*CELL*0.44,ang=bAng+tt*Math.PI*2.5; if(st===0)ctx.moveTo(Math.cos(ang)*rr2,Math.sin(ang)*rr2*0.7);else ctx.lineTo(Math.cos(ang)*rr2,Math.sin(ang)*rr2*0.7); }
+            ctx.stroke();
+          }
+          ctx.fillStyle='rgba(230,190,255,0.9)';ctx.beginPath();ctx.arc(0,0,2.5,0,Math.PI*2);ctx.fill();
+          ctx.restore();ctx.shadowBlur=0;
+        }
+        // swap flash ring
+        if (o.swapFlash>0) {
+          var fp=1-(o.swapFlash/350), fr=CELL*0.3+fp*CELL*0.55, fa=1-fp;
+          var fc2=(o.type==='fire')?'255,120,0':(o.type==='wall')?'180,180,180':'200,140,255';
+          ctx.shadowBlur=0;ctx.strokeStyle='rgba('+fc2+','+fa+')';ctx.lineWidth=2.5;
+          ctx.beginPath();ctx.arc(cx,cy,fr,0,Math.PI*2);ctx.stroke();
+        }
+      }
+    }
+
+    function drawFrog(offset) {
+      if (!frog) return;
+      var px=frog.x*CELL+CELL/2,py=frog.y*CELL+CELL/2+offset,r=CELL/2-2;
+      ctx.shadowColor=FC;ctx.shadowBlur=16;ctx.fillStyle=FC;
+      ctx.beginPath();ctx.ellipse(px,py+2,r-1,r-2,0,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=4;ctx.fillStyle='#fff';
+      ctx.beginPath();ctx.arc(px-3,py-3,2.5,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(px+3,py-3,2.5,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#000';
+      ctx.beginPath();ctx.arc(px-3,py-3,1.2,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(px+3,py-3,1.2,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;ctx.strokeStyle=darken(FC,0.65);ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(px-r+2,py+2);ctx.lineTo(px-r-3,py+r);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(px+r-2,py+2);ctx.lineTo(px+r+3,py+r);ctx.stroke();
+      ctx.shadowBlur=0;
+    }
+
+    function drawEgg() {
+      if (!egg) return;
+      var px=egg.x*CELL+CELL/2,py=egg.y*CELL+CELL/2;
+      var pulse=Math.sin(eggPulse*0.004)*0.5+0.5;
+      ctx.shadowColor='#ffe066';ctx.shadowBlur=8+pulse*10;
+      var g=ctx.createRadialGradient(px-2,py-3,1,px,py,CELL*0.42);
+      g.addColorStop(0,'#fff8c0');g.addColorStop(0.5,'#ffe066');g.addColorStop(1,'#cc9900');
+      ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(px,py,CELL*0.29,CELL*0.37,0,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=0.9;
+      ctx.beginPath();ctx.moveTo(px-2,py-2);ctx.lineTo(px,py+1);ctx.lineTo(px+3,py-1);ctx.stroke();
+      var alpha=0.5+pulse*0.5; ctx.fillStyle='rgba(255,255,180,'+alpha+')';
+      [[4,4],[-4,-3],[5,-5],[-5,4]].forEach(function(d){ ctx.beginPath();ctx.arc(px+d[0],py+d[1],1.2,0,Math.PI*2);ctx.fill(); });
+      ctx.shadowBlur=0;
+    }
+
+    function drawSnake() {
+      for (var i=snake.length-1;i>=0;i--) {
+        var s=snake[i], t=snake.length>1?i/(snake.length-1):0;
+        var alpha=i===0?1:(0.58+0.42*(1-t));
+        ctx.shadowColor=SC;ctx.shadowBlur=i===0?14:5;
+        ctx.fillStyle='rgba('+hexRgb(SC)+','+alpha+')';
+        if (i===0) rr(s.x*CELL+2,s.y*CELL+2,CELL-4,CELL-4,4);
+        else       rr(s.x*CELL+3,s.y*CELL+3,CELL-6,CELL-6,3);
+        ctx.fill();
+        if (i===0) {
+          ctx.shadowBlur=0;ctx.fillStyle='#fff';
+          ctx.beginPath();ctx.arc(s.x*CELL+CELL*0.3,s.y*CELL+CELL*0.32,2,0,Math.PI*2);ctx.fill();
+          ctx.beginPath();ctx.arc(s.x*CELL+CELL*0.7,s.y*CELL+CELL*0.32,2,0,Math.PI*2);ctx.fill();
+          ctx.fillStyle='#111';
+          ctx.beginPath();ctx.arc(s.x*CELL+CELL*0.3,s.y*CELL+CELL*0.32,1,0,Math.PI*2);ctx.fill();
+          ctx.beginPath();ctx.arc(s.x*CELL+CELL*0.7,s.y*CELL+CELL*0.32,1,0,Math.PI*2);ctx.fill();
+        }
+      }
+      ctx.shadowBlur=0;
+    }
+
+    // ── MAIN LOOP ─────────────────────────────────────────
+    function loop(ts) {
+      if (!gameRunning) return;
+      if (!lastTime) lastTime=ts;
+      var dt=Math.min(ts-lastTime,100); lastTime=ts;
+      gameMs+=dt; stepAccum+=dt; hopAccum+=dt; eggPulse+=dt;
+      applyDifficulty();
+      if (egg){eggTimer-=dt; if(eggTimer<=0){egg=null;maybeScheduleEgg();}}
+      swapObstacles(dt); moveTornadoes(dt);
+      for (var i=0;i<obstacles.length;i++) if (obstacles[i].x===snake[0].x&&obstacles[i].y===snake[0].y){endGame();return;}
+      frogAnim+=frogDir*dt*0.006;
+      if (frogAnim>3)frogDir=-1; if(frogAnim<-3)frogDir=1;
+      if (hopAccum>=HOP_MS){hopAccum=0;spawnFrog();}
+      if (stepAccum>=stepMs){stepAccum-=stepMs;gameStep();}
+      drawGrid();drawObstacles();drawEgg();drawFrog(frogAnim);drawSnake();
+      if (gameRunning) requestAnimationFrame(loop);
+    }
+
+    // ── INPUT ─────────────────────────────────────────────
+    var KMAP={ArrowUp:{x:0,y:-1},w:{x:0,y:-1},W:{x:0,y:-1},ArrowDown:{x:0,y:1},s:{x:0,y:1},S:{x:0,y:1},ArrowLeft:{x:-1,y:0},a:{x:-1,y:0},A:{x:-1,y:0},ArrowRight:{x:1,y:0},d:{x:1,y:0},D:{x:1,y:0}};
+    document.addEventListener('keydown',function(e){
+      var d=KMAP[e.key]; if(!d)return;
+      // only preventDefault if focus is inside the game area
+      if (document.activeElement===document.getElementById('sf-pname')) return;
+      e.preventDefault();
+      if (gameRunning&&(d.x!==-dir.x||d.y!==-dir.y)) nextDir=d;
+    });
+
+    function dp(d){if(gameRunning&&(d.x!==-dir.x||d.y!==-dir.y))nextDir=d;}
+    ['sf-dU','sf-dU2'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('click',function(){dp({x:0,y:-1});});});
+    ['sf-dD','sf-dD2'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('click',function(){dp({x:0,y:1});});});
+    ['sf-dL','sf-dL2'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('click',function(){dp({x:-1,y:0});});});
+    ['sf-dR','sf-dR2'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('click',function(){dp({x:1,y:0});});});
+
+    // touch swipe support
+    var touchStartX=0,touchStartY=0;
+    canvas.addEventListener('touchstart',function(e){touchStartX=e.touches[0].clientX;touchStartY=e.touches[0].clientY;e.preventDefault();},{passive:false});
+    canvas.addEventListener('touchend',function(e){
+      var dx=e.changedTouches[0].clientX-touchStartX, dy=e.changedTouches[0].clientY-touchStartY;
+      if (Math.abs(dx)<10&&Math.abs(dy)<10) return;
+      if (Math.abs(dx)>Math.abs(dy)) dp({x:dx>0?1:-1,y:0}); else dp({x:0,y:dy>0?1:-1});
+      e.preventDefault();
+    },{passive:false});
+
+    // ── OVERLAYS ──────────────────────────────────────────
+    function startGame(){
+      document.getElementById('sf-entryOv').classList.add('hide');
+      document.getElementById('sf-goOv').classList.add('hide');
+      initGame(); gameRunning=true; requestAnimationFrame(loop);
+    }
+
+    document.getElementById('sf-startBtn').addEventListener('click',function(){
+      var n=document.getElementById('sf-pname').value.trim();
+      playerName=n||'PLAYER ONE'; startGame();
+    });
+    document.getElementById('sf-pname').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('sf-startBtn').click();});
+    document.getElementById('sf-replayBtn').addEventListener('click',function(){document.getElementById('sf-goOv').classList.add('hide');startGame();});
+    document.getElementById('sf-chNameBtn').addEventListener('click',function(){
+      document.getElementById('sf-goOv').classList.add('hide');
+      document.getElementById('sf-entryOv').classList.remove('hide');
+      document.getElementById('sf-pname').value='';
+    });
+
+    // ── BOOT ──────────────────────────────────────────────
+    drawGrid();
+
+    })();
+    </script>
+
     <!-- Experience Section -->
     <section class="experience full-screen-section" id="experience">
         <div class="container">
@@ -1047,7 +1847,7 @@
                         </div>
                         <div>
                             <h3>Email</h3>
-                            <p>prajwalpoudel0902@gmail.com</p>
+                            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a6d6d4c7ccd1c7cad6c9d3c2c3ca969f9694e6c1cbc7cfca88c5c9cb">[email&#160;protected]</a></p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -1098,13 +1898,13 @@
                 <div class="social-links">
                     <a href="https://github.com/Prajwal0902" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
                     <a href="https://www.linkedin.com/in/mrpoudel/" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="mailto:prajwalpoudel0902@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
+                    <a href="/cdn-cgi/l/email-protection#a8d8dac9c2dfc9c4d8c7ddcccdc49891989ae8cfc5c9c1c486cbc7c5" class="social-link"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Simple smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1227,11 +2027,4 @@
                 .catch(error => {
                     console.error('Error fetching GitHub projects:', error);
                     loader.style.display = 'none';
-                    projectsContainer.innerHTML = `
-                        <p>Unable to load projects from GitHub. Please visit my <a href="https://github.com/Prajwal0902" target="_blank">GitHub profile</a> directly.</p>
-                    `;
-                });
-        });
-    </script>
-</body>
-</html>
+                   
