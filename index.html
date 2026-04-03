@@ -974,9 +974,9 @@
             <h2 class="section-title" data-i18n="about_title">About Me</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p data-i18n="about_p1">I'm Prajwal Poudel, a Software Engineering graduate (MSc) with expertise in Python, SQL, and full-stack development, complemented by hands-on experience in database management, IT support, and web/app development.</p>
-                    <p data-i18n="about_p2">My professional journey has equipped me with strong problem-solving abilities, process optimization skills, and experience in collaborative project delivery. I'm passionate about building user-centric applications and leveraging emerging technologies like NLP and machine learning to create innovative solutions.</p>
-                    <p data-i18n="about_p3">With experience as both a software developer and business manager, I bring a unique perspective to projects, understanding both the technical requirements and business objectives needed for success.</p>
+                    <p data-i18n="about_p1">I'm Prajwal Poudel — a Software Engineering graduate (MSc) who speaks fluent Python, SQL, and just enough JavaScript to accidentally break the UI in three different ways at once. I've mastered full-stack development, database management, IT support (yes, I've tried turning it off and on again), and web/app development, often while muttering, "Why does this work now?"</p>
+                    <p data-i18n="about_p2">My professional journey has blessed me with strong problem-solving skills — like figuring out why the code worked yesterday but not today — and process optimization abilities that would make a spreadsheet weep with joy. I thrive in collaborative environments, mainly because someone needs to remind me to push to the right branch. But wait, there's more.</p>
+                    <p data-i18n="about_p3">When I'm not wrestling with APIs or debugging life itself, I play guitar (loud enough to annoy the neighbors, soulful enough to keep them curious), sing (mostly in the shower, but occasionally on purpose), cook (my dal rice has layers, like an onion, but tastier), and go on random drives — because nothing says "I have deadlines" like getting lost at 90 km/h with the windows down and a questionable playlist on shuffle. I find love in everything — even in merge conflicts (eventually). My mantra? <em style="color:var(--primary);font-style:normal;font-weight:600">"Perfection is not the key, consistency is."</em></p>
                     <div class="skills">
                         <span class="skill">Python</span>
                         <span class="skill">SQL</span>
@@ -1178,7 +1178,7 @@
 
             <!-- SCOREBOARD -->
             <div id="sf-sbp">
-              <div class="sf-sbh"><div class="sf-sbt">&#9889; LEADERBOARD</div></div>
+              <div class="sf-sbh"><div class="sf-sbt">&#9889; LEADERBOARD &mdash; TOP 10</div></div>
               <div id="sf-sbcontent"><div class="sf-sbmpty">No scores yet &mdash; be the first!</div></div>
             </div>
 
@@ -1275,7 +1275,7 @@
     //   3. Copy the Bin ID and your API key, paste below
     // Until configured, scores save to localStorage only.
 
-    var JSONBIN_BIN_ID  = '69d0486d36566621a878d5be';   // e.g. '6634a1234abc...'  ← paste your Bin ID here
+   var JSONBIN_BIN_ID  = '69d0486d36566621a878d5be';   // e.g. '6634a1234abc...'  ← paste your Bin ID here
     var JSONBIN_API_KEY = '$2a$10$4pqasoM8mlYXNHRHc7ESxeAY//IZiLJsgiUFneZpWFlFF0wsasM2i';   // e.g. '$2a$10$abc...'    ← paste your API key here
     var LOCAL_KEY = 'sfScores_v2';
 
@@ -1293,7 +1293,7 @@
     function mergeScores(a, b) {
       var merged = a.concat(b);
       merged.sort(function(x,y){ return y.score - x.score; });
-      return dedup(merged).slice(0, 15);
+      return dedup(merged).slice(0, 10);
     }
 
     var cloudEnabled = JSONBIN_BIN_ID && JSONBIN_API_KEY;
@@ -2100,9 +2100,9 @@
         hero_sub2:'Passionate about building user-centric applications and leveraging emerging technologies like NLP/ML to solve real-world problems.',
         hero_btn:'View My Work',
         about_title:'About Me',
-        about_p1:"I'm Prajwal Poudel, a Software Engineering graduate (MSc) with expertise in Python, SQL, and full-stack development, complemented by hands-on experience in database management, IT support, and web/app development.",
-        about_p2:"My professional journey has equipped me with strong problem-solving abilities, process optimization skills, and experience in collaborative project delivery. I'm passionate about building user-centric applications and leveraging emerging technologies like NLP and machine learning to create innovative solutions.",
-        about_p3:"With experience as both a software developer and business manager, I bring a unique perspective to projects, understanding both the technical requirements and business objectives needed for success.",
+        about_p1:"I'm Prajwal Poudel — a Software Engineering graduate (MSc) who speaks fluent Python, SQL, and just enough JavaScript to accidentally break the UI in three different ways at once. I've mastered full-stack development, database management, IT support (yes, I've tried turning it off and on again), and web/app development, often while muttering, \"Why does this work now?\"",
+        about_p2:"My professional journey has blessed me with strong problem-solving skills — like figuring out why the code worked yesterday but not today — and process optimization abilities that would make a spreadsheet weep with joy. I thrive in collaborative environments, mainly because someone needs to remind me to push to the right branch. But wait, there's more.",
+        about_p3:"When I'm not wrestling with APIs or debugging life itself, I play guitar (loud enough to annoy the neighbors, soulful enough to keep them curious), sing (mostly in the shower, but occasionally on purpose), cook (my dal rice has layers, like an onion, but tastier), and go on random drives — because nothing says \"I have deadlines\" like getting lost at 90 km/h with the windows down and a questionable playlist on shuffle. I find love in everything — even in merge conflicts (eventually). My mantra? \"Perfection is not the key, consistency is.\"",
         game_title:'Snake & Frog', game_sub:'Take a break — eat frogs, dodge fire, outsmart tornadoes.',
         exp_title:'Professional Experience',
         exp1_role:'Junior Database Manager & IT Support',
