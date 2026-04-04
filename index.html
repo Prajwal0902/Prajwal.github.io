@@ -976,7 +976,7 @@
                 <div class="about-text">
                     <p data-i18n="about_p1">I'm Prajwal Poudel a Software Engineering graduate (MSc) who speaks fluent Python, SQL, and just enough JavaScript to accidentally break the UI in three different ways at once. I've mastered full-stack development, database management, IT support (yes, I've tried turning it off and on again), and web/app development, often while muttering, "Why does this work now?"</p>
                     <p data-i18n="about_p2">My professional journey has blessed me with strong problem-solving skills like figuring out why the code worked yesterday but not today and process optimization abilities that would make a spreadsheet weep with joy. I thrive in collaborative environments, mainly because someone needs to remind me to push to the right branch. But wait, there's more.</p>
-                    <p data-i18n="about_p3">When I'm not wrestling with APIs or debugging life itself, I play guitar (loud enough to annoy the neighbors, soulful enough to keep them curious), sing (mostly in the shower, but occasionally on purpose), cook (my chicken rice has layers, like an onion, but tastier), and go on random drives  because nothing says "I have deadlines" like getting lost at 90 km/h with the windows down and a questionable playlist on shuffle. I find love in everything even in merge conflicts (eventually). My mantra? <em style="color:var(--primary);font-style:normal;font-weight:600">"Perfection is not the key, consistency is."</em></p>
+                    <p data-i18n="about_p3">When I'm not wrestling with APIs or debugging life itself, I play guitar (loud enough to annoy the neighbors, soulful enough to keep them curious), sing (mostly in the shower, but occasionally on purpose), cook (my chicken rice has layers, like an onion, but tastier), and go on random drives because nothing says "I have deadlines" like getting lost at 90 km/h with the windows down and a questionable playlist on shuffle. I find love in everything even in merge conflicts (eventually). My mantra? <em style="color:var(--primary);font-style:normal;font-weight:600">"Perfection is not the key, consistency is."</em></p>
                     <div class="skills">
                         <span class="skill">Python</span>
                         <span class="skill">SQL</span>
@@ -1006,14 +1006,15 @@
         <h2 class="section-title" data-i18n="game_title">Snake &amp; Frog</h2>
         <p style="color:var(--gray);font-size:1rem;margin-bottom:2rem;max-width:600px;">
           <span data-i18n="game_sub">Take a break — eat frogs, dodge fire, outsmart tornadoes.</span>
-            <span data-i18n="game_sub">(Don't hate me if it lags. It's just timePass)</span>
+             <p style="color:var(--gray);font-size:1rem;margin-bottom:2rem;max-width:600px;">
+          <span data-i18n="game_sub">Don't hate me if it lags. iTs only for tImEpAsS</span>
         </p>
 
         <div id="sf-root">
           <style>
             @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
             #sf-root{--gsc:#39ff14;--gfc:#00cfff;--gbd:#1a1a2e;--gac:#ff007f;--gtx:#e0e0e0;--gdm:#444466;font-family:'Press Start 2P',monospace;width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;}
-            #sf-wrap{position:relative;background:#0a0a0f;border-radius:8px;border:1px solid rgba(212,175,55,.15);box-shadow:0 0 60px rgba(0,0,0,.6);padding:16px 12px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;overflow:hidden;width:100%;max-width:840px;}
+            #sf-wrap{position:relative;background:#0a0a0f;border-radius:8px;border:1px solid rgba(212,175,55,.15);box-shadow:0 0 60px rgba(0,0,0,.6);padding:16px 12px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;overflow:hidden;width:100%;max-width:840px;contain:layout style;}
             #sf-scanlines{position:absolute;inset:0;pointer-events:none;z-index:200;background:repeating-linear-gradient(0deg,rgba(0,0,0,.06) 0,rgba(0,0,0,.06) 1px,transparent 1px,transparent 4px);border-radius:8px;}
             #sf-title{font-family:'Press Start 2P',monospace;font-size:clamp(14px,3.5vw,20px);letter-spacing:.15em;color:#39ff14;text-shadow:0 0 16px #39ff14,0 0 32px #39ff14;animation:sf-flicker 5s infinite;position:relative;z-index:1;}
             #sf-title .sf-ta{color:#00cfff;text-shadow:0 0 16px #00cfff;}
@@ -1035,7 +1036,7 @@
             #sf-root .sf-sw.on{border-color:#fff;transform:scale(1.15);box-shadow:0 0 5px #fff8;}
             /* canvas */
             #sf-cw{position:relative;flex-shrink:0;}
-            #sf-gc{display:block;border:2px solid var(--gbd);image-rendering:pixelated;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 0 30px rgba(57,255,20,.07);}
+            #sf-gc{display:block;border:2px solid var(--gbd);image-rendering:pixelated;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 0 30px rgba(57,255,20,.07);will-change:contents;}
             /* overlays */
             .sf-ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,15,.92);gap:10px;z-index:5;padding:16px;}
             .sf-ov.hide{display:none;}
@@ -1088,6 +1089,38 @@
             #sf-root .sf-sbtbl tr.sf-g1 td:last-child{color:#ffd700;text-shadow:0 0 9px #ffd700;}
             #sf-root .sf-sbrank{color:var(--gdm)!important;font-size:13px!important;text-shadow:none!important;}
             #sf-root .sf-sbmpty{font-size:7px;color:var(--gdm);text-align:center;padding:10px;}
+
+            /* ── FULLSCREEN ── */
+            #sf-fs-btn {
+              position:absolute; top:10px; right:10px; z-index:50;
+              background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+              color:#888; font-size:14px; width:28px; height:28px;
+              display:flex; align-items:center; justify-content:center;
+              cursor:pointer; border-radius:4px; transition:all .15s;
+              touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+            }
+            #sf-fs-btn:hover { background:rgba(255,255,255,.14); color:#fff; border-color:var(--gsc); }
+
+            /* fullscreen layout overrides */
+            #sf-wrap.sf-fullscreen {
+              position:fixed !important; inset:0 !important; z-index:9999 !important;
+              max-width:none !important; border-radius:0 !important;
+              border:none !important; padding:8px !important;
+              flex-direction:row !important; align-items:center !important;
+              justify-content:center !important; gap:12px !important;
+            }
+            #sf-wrap.sf-fullscreen .sf-sidebar { display:flex !important; }
+            #sf-wrap.sf-fullscreen #sf-mobile-hud { display:none !important; }
+            #sf-wrap.sf-fullscreen #sf-mobile-dpad { display:none !important; }
+            #sf-wrap.sf-fullscreen #sf-mobile-colors { display:none !important; }
+            #sf-wrap.sf-fullscreen #sf-game-area {
+              flex-direction:row !important; align-items:flex-start !important;
+              justify-content:center !important;
+            }
+            #sf-wrap.sf-fullscreen #sf-sbp { display:none !important; }
+            #sf-wrap.sf-fullscreen #sf-title { display:none !important; }
+            #sf-wrap.sf-fullscreen #sf-scanlines { border-radius:0 !important; }
+
             /* ── RESPONSIVE ── */
             @media(max-width:680px){
               .sf-sidebar{display:none!important;}
@@ -1101,6 +1134,7 @@
 
           <div id="sf-wrap">
             <div id="sf-scanlines"></div>
+            <button id="sf-fs-btn" title="Fullscreen">&#x26F6;</button>
             <div id="sf-title">SNAKE <span class="sf-ta">&amp;</span> FROG</div>
 
             <!-- MOBILE HUD -->
@@ -1222,9 +1256,9 @@
       if (!gameRunning) drawGrid();
     }
 
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('load',   resizeCanvas);
-    setTimeout(resizeCanvas, 200);
+    window.addEventListener('resize', function(){ typeof resizeForFS==='function' ? resizeForFS() : resizeCanvas(); });
+    window.addEventListener('load',   function(){ typeof resizeForFS==='function' ? resizeForFS() : resizeCanvas(); });
+    setTimeout(function(){ typeof resizeForFS==='function' ? resizeForFS() : resizeCanvas(); }, 200);
 
 
     // ── CONSTANTS ─────────────────────────────────────────
@@ -1276,7 +1310,7 @@
     //   3. Copy the Bin ID and your API key, paste below
     // Until configured, scores save to localStorage only.
 
-   var JSONBIN_BIN_ID  = '69d0486d36566621a878d5be';   // e.g. '6634a1234abc...'  ← paste your Bin ID here
+    var JSONBIN_BIN_ID  = '69d0486d36566621a878d5be';   // e.g. '6634a1234abc...'  ← paste your Bin ID here
     var JSONBIN_API_KEY = '$2a$10$4pqasoM8mlYXNHRHc7ESxeAY//IZiLJsgiUFneZpWFlFF0wsasM2i';   // e.g. '$2a$10$abc...'    ← paste your API key here
     var LOCAL_KEY = 'sfScores_v2';
 
@@ -1390,7 +1424,7 @@
     var score, growing, gameRunning;
     var lastTime, stepAccum, stepMs, hopAccum;
     var frogAnim, frogDir;
-    var gameMs, lastDiffId;
+    var gameMs, lastDiffId, diffCheckAccum;
     var playerName = 'PLAYER ONE';
     var eggTid = null;
 
@@ -1418,15 +1452,25 @@
 
     function spawnFrog() { frog=randCell(occupiedCells()); frogAnim=0; frogDir=1; }
 
+    var _hudScore=-1, _hudTime='', _hudTierId=-1;
     function setHUD(timeStr, sc, tier) {
-      // update all HUD elements (desktop sidebars + mobile bar)
-      document.getElementById('sf-scoredisp').textContent   = sc;
-      document.getElementById('sf-scoredisp-m').textContent = sc;
-      document.getElementById('sf-timedisp').textContent    = timeStr;
-      document.getElementById('sf-timedisp-m').textContent  = timeStr;
-      var tags = [document.getElementById('sf-difftag'), document.getElementById('sf-difftag-m')];
-      tags.forEach(function(t){ if(!t)return; t.textContent='\u25CF '+tier.label; t.style.color=tier.color; t.style.textShadow='0 0 8px '+tier.color; });
+      if (sc !== _hudScore) {
+        _hudScore = sc;
+        document.getElementById('sf-scoredisp').textContent   = sc;
+        document.getElementById('sf-scoredisp-m').textContent = sc;
+      }
+      if (timeStr !== _hudTime) {
+        _hudTime = timeStr;
+        document.getElementById('sf-timedisp').textContent   = timeStr;
+        document.getElementById('sf-timedisp-m').textContent = timeStr;
+      }
+      if (tier.id !== _hudTierId) {
+        _hudTierId = tier.id;
+        var tags = [document.getElementById('sf-difftag'), document.getElementById('sf-difftag-m')];
+        tags.forEach(function(t){ if(!t)return; t.textContent='\u25CF '+tier.label; t.style.color=tier.color; t.style.textShadow='0 0 8px '+tier.color; });
+      }
     }
+    function resetHUDCache(){ _hudScore=-1; _hudTime=''; _hudTierId=-1; }
 
     // ── SPEED ─────────────────────────────────────────────
     function calcSpeed() {
@@ -1479,7 +1523,7 @@
       dir={x:1,y:0}; nextDir={x:1,y:0};
       score=0; growing=0; lastTime=null; stepAccum=0; hopAccum=0;
       eggPulse=0; egg=null; eggTimer=0; obstacles=[];
-      gameMs=0; lastDiffId=0; stepMs=SPEED_SLOW;
+      gameMs=0; lastDiffId=0; stepMs=SPEED_SLOW; diffCheckAccum=0;
       frogAnim=0; frogDir=1;
       frog=randCell(snake);
       maybeScheduleEgg();
@@ -1675,7 +1719,8 @@
       if (!lastTime) lastTime=ts;
       var dt=Math.min(ts-lastTime,100); lastTime=ts;
       gameMs+=dt; stepAccum+=dt; hopAccum+=dt; eggPulse+=dt;
-      applyDifficulty();
+      diffCheckAccum+=dt;
+      if(diffCheckAccum>=500){diffCheckAccum=0;applyDifficulty();}
       if (egg){eggTimer-=dt; if(eggTimer<=0){egg=null;maybeScheduleEgg();}}
       swapObstacles(dt); moveTornadoes(dt);
       for (var i=0;i<obstacles.length;i++) if (obstacles[i].x===snake[0].x&&obstacles[i].y===snake[0].y){endGame();return;}
@@ -1758,6 +1803,110 @@
       document.getElementById('sf-goOv').classList.add('hide');
       document.getElementById('sf-entryOv').classList.remove('hide');
       document.getElementById('sf-pname').value='';
+    });
+
+
+    // ── FULLSCREEN ────────────────────────────────────────
+    var isFS = false;
+
+    function enterFS() {
+      var wrap = document.getElementById('sf-wrap');
+      var req = wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.mozRequestFullScreen;
+      if (req) {
+        req.call(wrap);
+      } else {
+        // fallback: CSS-only fullscreen for browsers that don't support element fullscreen
+        wrap.classList.add('sf-fullscreen');
+        isFS = true;
+        resizeForFS();
+      }
+    }
+
+    function exitFS() {
+      var wrap = document.getElementById('sf-wrap');
+      var ex = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen;
+      if (ex && (document.fullscreenElement || document.webkitFullscreenElement)) {
+        ex.call(document);
+      } else {
+        wrap.classList.remove('sf-fullscreen');
+        isFS = false;
+        resizeForFS();
+      }
+    }
+
+    function resizeForFS() {
+      var wrap = document.getElementById('sf-wrap');
+      var inFS = wrap.classList.contains('sf-fullscreen') ||
+                 document.fullscreenElement === wrap ||
+                 document.webkitFullscreenElement === wrap;
+      isFS = inFS;
+
+      var btn = document.getElementById('sf-fs-btn');
+      if (btn) btn.innerHTML = inFS ? '&#x2715;' : '&#x26F6;';
+      if (btn) btn.title     = inFS ? 'Exit Fullscreen' : 'Fullscreen';
+
+      var isMobile = window.innerWidth <= 680;
+      var size;
+      if (inFS) {
+        // In fullscreen: calculate canvas to fill available space alongside sidebars
+        var vw = window.innerWidth  || screen.width;
+        var vh = window.innerHeight || screen.height;
+        var sideW = (isMobile ? 0 : 130 * 2 + 24); // two sidebars + gaps
+        var available = Math.min(vw - sideW - 40, vh - 40);
+        size = Math.floor(available / COLS) * COLS;
+        size = Math.max(size, 200);
+        if (isMobile) {
+          // on mobile fullscreen: stack vertically, canvas takes most of height
+          var dpadH = 160, hudH = 60, titleH = 0, padding = 32;
+          size = Math.min(vw - 16, vh - dpadH - hudH - titleH - padding);
+          size = Math.floor(size / COLS) * COLS;
+          size = Math.max(size, 200);
+          if (wrap.classList.contains('sf-fullscreen') || document.fullscreenElement) {
+            wrap.style.flexDirection = 'column';
+            wrap.querySelector && (function(){
+              var ga = document.getElementById('sf-game-area');
+              if (ga) ga.style.flexDirection = 'column';
+            })();
+          }
+        }
+      } else {
+        size = (window.innerWidth <= 680)
+          ? Math.max(200, Math.floor((wrap.offsetWidth - 24) / COLS) * COLS)
+          : 400;
+      }
+
+      canvas.width  = size;
+      canvas.height = size;
+      canvas.style.width  = size + 'px';
+      canvas.style.height = size + 'px';
+      CELL = size / COLS;
+      if (!gameRunning) drawGrid();
+    }
+
+    document.getElementById('sf-fs-btn').addEventListener('click', function() {
+      if (isFS) exitFS(); else enterFS();
+    });
+
+    // native fullscreen change events
+    ['fullscreenchange','webkitfullscreenchange','mozfullscreenchange'].forEach(function(ev) {
+      document.addEventListener(ev, function() {
+        var wrap = document.getElementById('sf-wrap');
+        var inFS = document.fullscreenElement === wrap || document.webkitFullscreenElement === wrap;
+        if (inFS) {
+          wrap.classList.add('sf-fullscreen');
+        } else {
+          wrap.classList.remove('sf-fullscreen');
+          // restore normal game area layout
+          var ga = document.getElementById('sf-game-area');
+          if (ga) ga.style.flexDirection = '';
+        }
+        resizeForFS();
+      });
+    });
+
+    // ESC key exits CSS-only fullscreen too
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && isFS) exitFS();
     });
 
     // ── BOOT ──────────────────────────────────────────────
