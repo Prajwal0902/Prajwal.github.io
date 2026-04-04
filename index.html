@@ -1006,8 +1006,7 @@
         <h2 class="section-title" data-i18n="game_title">Snake &amp; Frog</h2>
         <p style="color:var(--gray);font-size:1rem;margin-bottom:2rem;max-width:600px;">
           <span data-i18n="game_sub">Take a break — eat frogs, dodge fire, outsmart tornadoes.</span>
-             <p style="color:var(--gray);font-size:1rem;margin-bottom:2rem;max-width:600px;">
-          <span data-i18n="game_sub">Don't hate me if it lags. iTs only for tImEpAsS</span>
+             <span data-i18n="game_sub">Don't hate me if it lags, it's only timepass</span>
         </p>
 
         <div id="sf-root">
@@ -1089,38 +1088,6 @@
             #sf-root .sf-sbtbl tr.sf-g1 td:last-child{color:#ffd700;text-shadow:0 0 9px #ffd700;}
             #sf-root .sf-sbrank{color:var(--gdm)!important;font-size:13px!important;text-shadow:none!important;}
             #sf-root .sf-sbmpty{font-size:7px;color:var(--gdm);text-align:center;padding:10px;}
-
-            /* ── FULLSCREEN ── */
-            #sf-fs-btn {
-              position:absolute; top:10px; right:10px; z-index:50;
-              background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
-              color:#888; font-size:14px; width:28px; height:28px;
-              display:flex; align-items:center; justify-content:center;
-              cursor:pointer; border-radius:4px; transition:all .15s;
-              touch-action:manipulation; -webkit-tap-highlight-color:transparent;
-            }
-            #sf-fs-btn:hover { background:rgba(255,255,255,.14); color:#fff; border-color:var(--gsc); }
-
-            /* fullscreen layout overrides */
-            #sf-wrap.sf-fullscreen {
-              position:fixed !important; inset:0 !important; z-index:9999 !important;
-              max-width:none !important; border-radius:0 !important;
-              border:none !important; padding:8px !important;
-              flex-direction:row !important; align-items:center !important;
-              justify-content:center !important; gap:12px !important;
-            }
-            #sf-wrap.sf-fullscreen .sf-sidebar { display:flex !important; }
-            #sf-wrap.sf-fullscreen #sf-mobile-hud { display:none !important; }
-            #sf-wrap.sf-fullscreen #sf-mobile-dpad { display:none !important; }
-            #sf-wrap.sf-fullscreen #sf-mobile-colors { display:none !important; }
-            #sf-wrap.sf-fullscreen #sf-game-area {
-              flex-direction:row !important; align-items:flex-start !important;
-              justify-content:center !important;
-            }
-            #sf-wrap.sf-fullscreen #sf-sbp { display:none !important; }
-            #sf-wrap.sf-fullscreen #sf-title { display:none !important; }
-            #sf-wrap.sf-fullscreen #sf-scanlines { border-radius:0 !important; }
-
             /* ── RESPONSIVE ── */
             @media(max-width:680px){
               .sf-sidebar{display:none!important;}
@@ -1134,7 +1101,6 @@
 
           <div id="sf-wrap">
             <div id="sf-scanlines"></div>
-            <button id="sf-fs-btn" title="Fullscreen">&#x26F6;</button>
             <div id="sf-title">SNAKE <span class="sf-ta">&amp;</span> FROG</div>
 
             <!-- MOBILE HUD -->
@@ -1256,9 +1222,9 @@
       if (!gameRunning) drawGrid();
     }
 
-    window.addEventListener('resize', function(){ typeof resizeForFS==='function' ? resizeForFS() : resizeCanvas(); });
-    window.addEventListener('load',   function(){ typeof resizeForFS==='function' ? resizeForFS() : resizeCanvas(); });
-    setTimeout(function(){ typeof resizeForFS==='function' ? resizeForFS() : resizeCanvas(); }, 200);
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('load',   resizeCanvas);
+    setTimeout(resizeCanvas, 200);
 
 
     // ── CONSTANTS ─────────────────────────────────────────
@@ -1804,111 +1770,6 @@
       document.getElementById('sf-entryOv').classList.remove('hide');
       document.getElementById('sf-pname').value='';
     });
-
-
-    // ── FULLSCREEN ────────────────────────────────────────
-    var isFS = false;
-
-    function enterFS() {
-      var wrap = document.getElementById('sf-wrap');
-      var req = wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.mozRequestFullScreen;
-      if (req) {
-        req.call(wrap);
-      } else {
-        // fallback: CSS-only fullscreen for browsers that don't support element fullscreen
-        wrap.classList.add('sf-fullscreen');
-        isFS = true;
-        resizeForFS();
-      }
-    }
-
-    function exitFS() {
-      var wrap = document.getElementById('sf-wrap');
-      var ex = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen;
-      if (ex && (document.fullscreenElement || document.webkitFullscreenElement)) {
-        ex.call(document);
-      } else {
-        wrap.classList.remove('sf-fullscreen');
-        isFS = false;
-        resizeForFS();
-      }
-    }
-
-    function resizeForFS() {
-      var wrap = document.getElementById('sf-wrap');
-      var inFS = wrap.classList.contains('sf-fullscreen') ||
-                 document.fullscreenElement === wrap ||
-                 document.webkitFullscreenElement === wrap;
-      isFS = inFS;
-
-      var btn = document.getElementById('sf-fs-btn');
-      if (btn) btn.innerHTML = inFS ? '&#x2715;' : '&#x26F6;';
-      if (btn) btn.title     = inFS ? 'Exit Fullscreen' : 'Fullscreen';
-
-      var isMobile = window.innerWidth <= 680;
-      var size;
-      if (inFS) {
-        // In fullscreen: calculate canvas to fill available space alongside sidebars
-        var vw = window.innerWidth  || screen.width;
-        var vh = window.innerHeight || screen.height;
-        var sideW = (isMobile ? 0 : 130 * 2 + 24); // two sidebars + gaps
-        var available = Math.min(vw - sideW - 40, vh - 40);
-        size = Math.floor(available / COLS) * COLS;
-        size = Math.max(size, 200);
-        if (isMobile) {
-          // on mobile fullscreen: stack vertically, canvas takes most of height
-          var dpadH = 160, hudH = 60, titleH = 0, padding = 32;
-          size = Math.min(vw - 16, vh - dpadH - hudH - titleH - padding);
-          size = Math.floor(size / COLS) * COLS;
-          size = Math.max(size, 200);
-          if (wrap.classList.contains('sf-fullscreen') || document.fullscreenElement) {
-            wrap.style.flexDirection = 'column';
-            wrap.querySelector && (function(){
-              var ga = document.getElementById('sf-game-area');
-              if (ga) ga.style.flexDirection = 'column';
-            })();
-          }
-        }
-      } else {
-        size = (window.innerWidth <= 680)
-          ? Math.max(200, Math.floor((wrap.offsetWidth - 24) / COLS) * COLS)
-          : 400;
-      }
-
-      canvas.width  = size;
-      canvas.height = size;
-      canvas.style.width  = size + 'px';
-      canvas.style.height = size + 'px';
-      CELL = size / COLS;
-      if (!gameRunning) drawGrid();
-    }
-
-    document.getElementById('sf-fs-btn').addEventListener('click', function() {
-      if (isFS) exitFS(); else enterFS();
-    });
-
-    // native fullscreen change events
-    ['fullscreenchange','webkitfullscreenchange','mozfullscreenchange'].forEach(function(ev) {
-      document.addEventListener(ev, function() {
-        var wrap = document.getElementById('sf-wrap');
-        var inFS = document.fullscreenElement === wrap || document.webkitFullscreenElement === wrap;
-        if (inFS) {
-          wrap.classList.add('sf-fullscreen');
-        } else {
-          wrap.classList.remove('sf-fullscreen');
-          // restore normal game area layout
-          var ga = document.getElementById('sf-game-area');
-          if (ga) ga.style.flexDirection = '';
-        }
-        resizeForFS();
-      });
-    });
-
-    // ESC key exits CSS-only fullscreen too
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && isFS) exitFS();
-    });
-
     // ── BOOT ──────────────────────────────────────────────
     drawGrid();
 
